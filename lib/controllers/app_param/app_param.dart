@@ -14,6 +14,7 @@ class AppParamState with _$AppParamState {
     List<OverlayEntry>? firstEntries,
     List<OverlayEntry>? secondEntries,
     void Function(VoidCallback fn)? setStateCallback,
+    Offset? overlayPosition,
   }) = _AppParamState;
 }
 
@@ -32,4 +33,7 @@ class AppParam extends _$AppParam {
   ///
   void setSecondOverlayParams({required List<OverlayEntry>? secondEntries}) =>
       state = state.copyWith(secondEntries: secondEntries);
+
+  ///
+  void updateOverlayPosition(Offset newPos) => state = state.copyWith(overlayPosition: newPos);
 }

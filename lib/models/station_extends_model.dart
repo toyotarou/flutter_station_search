@@ -1,3 +1,4 @@
+import '../extensions/extensions.dart';
 import 'station_model.dart';
 
 class StationExtendsModel extends StationModel {
@@ -21,7 +22,7 @@ class StationExtendsModel extends StationModel {
       lng: station.lng,
       lineNumber: station.lineNumber,
       lineName: station.lineName,
-      distance: distance.toStringAsFixed(2),
+      distance: distance,
     );
   }
 
@@ -34,11 +35,11 @@ class StationExtendsModel extends StationModel {
       lng: json['lng'].toString(),
       lineNumber: json['line_number'].toString(),
       lineName: json['line_name'].toString(),
-      distance: json['distance'].toString(),
+      distance: json['distance'].toString().toDouble(),
     );
   }
 
-  final String distance;
+  final double distance;
 
   @override
   Map<String, dynamic> toJson() {

@@ -20,6 +20,7 @@ mixin _$AppParamState {
   List<OverlayEntry>? get secondEntries => throw _privateConstructorUsedError;
   void Function(void Function())? get setStateCallback =>
       throw _privateConstructorUsedError;
+  Offset? get overlayPosition => throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -37,7 +38,8 @@ abstract class $AppParamStateCopyWith<$Res> {
   $Res call(
       {List<OverlayEntry>? firstEntries,
       List<OverlayEntry>? secondEntries,
-      void Function(void Function())? setStateCallback});
+      void Function(void Function())? setStateCallback,
+      Offset? overlayPosition});
 }
 
 /// @nodoc
@@ -58,6 +60,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? firstEntries = freezed,
     Object? secondEntries = freezed,
     Object? setStateCallback = freezed,
+    Object? overlayPosition = freezed,
   }) {
     return _then(_value.copyWith(
       firstEntries: freezed == firstEntries
@@ -72,6 +75,10 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.setStateCallback
           : setStateCallback // ignore: cast_nullable_to_non_nullable
               as void Function(void Function())?,
+      overlayPosition: freezed == overlayPosition
+          ? _value.overlayPosition
+          : overlayPosition // ignore: cast_nullable_to_non_nullable
+              as Offset?,
     ) as $Val);
   }
 }
@@ -87,7 +94,8 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
   $Res call(
       {List<OverlayEntry>? firstEntries,
       List<OverlayEntry>? secondEntries,
-      void Function(void Function())? setStateCallback});
+      void Function(void Function())? setStateCallback,
+      Offset? overlayPosition});
 }
 
 /// @nodoc
@@ -106,6 +114,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? firstEntries = freezed,
     Object? secondEntries = freezed,
     Object? setStateCallback = freezed,
+    Object? overlayPosition = freezed,
   }) {
     return _then(_$AppParamStateImpl(
       firstEntries: freezed == firstEntries
@@ -120,6 +129,10 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.setStateCallback
           : setStateCallback // ignore: cast_nullable_to_non_nullable
               as void Function(void Function())?,
+      overlayPosition: freezed == overlayPosition
+          ? _value.overlayPosition
+          : overlayPosition // ignore: cast_nullable_to_non_nullable
+              as Offset?,
     ));
   }
 }
@@ -130,7 +143,8 @@ class _$AppParamStateImpl implements _AppParamState {
   const _$AppParamStateImpl(
       {final List<OverlayEntry>? firstEntries,
       final List<OverlayEntry>? secondEntries,
-      this.setStateCallback})
+      this.setStateCallback,
+      this.overlayPosition})
       : _firstEntries = firstEntries,
         _secondEntries = secondEntries;
 
@@ -156,10 +170,12 @@ class _$AppParamStateImpl implements _AppParamState {
 
   @override
   final void Function(void Function())? setStateCallback;
+  @override
+  final Offset? overlayPosition;
 
   @override
   String toString() {
-    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback)';
+    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition)';
   }
 
   @override
@@ -172,7 +188,9 @@ class _$AppParamStateImpl implements _AppParamState {
             const DeepCollectionEquality()
                 .equals(other._secondEntries, _secondEntries) &&
             (identical(other.setStateCallback, setStateCallback) ||
-                other.setStateCallback == setStateCallback));
+                other.setStateCallback == setStateCallback) &&
+            (identical(other.overlayPosition, overlayPosition) ||
+                other.overlayPosition == overlayPosition));
   }
 
   @override
@@ -180,7 +198,8 @@ class _$AppParamStateImpl implements _AppParamState {
       runtimeType,
       const DeepCollectionEquality().hash(_firstEntries),
       const DeepCollectionEquality().hash(_secondEntries),
-      setStateCallback);
+      setStateCallback,
+      overlayPosition);
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -193,10 +212,10 @@ class _$AppParamStateImpl implements _AppParamState {
 
 abstract class _AppParamState implements AppParamState {
   const factory _AppParamState(
-          {final List<OverlayEntry>? firstEntries,
-          final List<OverlayEntry>? secondEntries,
-          final void Function(void Function())? setStateCallback}) =
-      _$AppParamStateImpl;
+      {final List<OverlayEntry>? firstEntries,
+      final List<OverlayEntry>? secondEntries,
+      final void Function(void Function())? setStateCallback,
+      final Offset? overlayPosition}) = _$AppParamStateImpl;
 
   @override
   List<OverlayEntry>? get firstEntries;
@@ -204,6 +223,8 @@ abstract class _AppParamState implements AppParamState {
   List<OverlayEntry>? get secondEntries;
   @override
   void Function(void Function())? get setStateCallback;
+  @override
+  Offset? get overlayPosition;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.

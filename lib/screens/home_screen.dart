@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../controllers/app_param/app_param.dart';
 import '../controllers/near_station/near_station.dart';
 import '../controllers/station/station.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
@@ -12,6 +13,8 @@ import '../models/station_extends_model.dart';
 import '../models/station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
+import 'parts/near_station_display_parts.dart';
+import 'parts/station_search_overlay.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -32,11 +35,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Utility utility = Utility();
 
+  final List<OverlayEntry> _firstEntries = <OverlayEntry>[];
+
+  final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
+
   ///
-  /// ボタン押下時に呼ばれるメソッド
   Future<void> _getCurrentLocation() async {
     try {
-      // 実際に位置情報を取得する
       final Position position = await _determinePosition();
 
       setState(() {
@@ -63,52 +68,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         });
       });
     } catch (e) {
-      setState(() {
-        _locationMessage = '位置情報の取得に失敗しました。\n$e';
-      });
+      setState(() => _locationMessage = '位置情報の取得に失敗しました。\n$e');
     }
   }
 
   ///
-  /// 実際に位置情報を取得するためのメソッド
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // 1. 位置情報サービス（GPSなど）が有効になっているか確認
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
     if (!serviceEnabled) {
       // ignore: always_specify_types
       return Future.error('位置情報サービスが無効です。');
     }
 
-    // 2. 現在の権限状態をチェック
     permission = await Geolocator.checkPermission();
 
-    // 3. 権限が「拒否」なら、権限リクエストを実行
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+
       if (permission == LocationPermission.denied) {
-        // ユーザーが権限を拒否した場合
         // ignore: always_specify_types
         return Future.error('位置情報の権限が拒否されています。');
       }
     }
 
-    // 4. ユーザーが「常に拒否」にしていた場合
     if (permission == LocationPermission.deniedForever) {
-      // 端末の設定アプリから権限を変更してもらう必要がある
       // ignore: always_specify_types
       return Future.error('位置情報の権限が「常に拒否」に設定されています。');
     }
 
-    // 5. ここまで到達すれば権限は許可済みなので、位置情報を取得
     return Geolocator.getCurrentPosition(
-      // 注意: `settings` ではなく `locationSettings` を使用
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 100, // 必要に応じて調整
-      ),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100),
     );
   }
 
@@ -139,14 +132,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               mapController: mapController,
               options: MapOptions(
                 initialCenter: const LatLng(35.718532, 139.586639),
-
                 initialZoom: currentZoomEightTeen,
-                // onPositionChanged: (MapCamera position, bool isMoving) {
-                //   if (isMoving) {
-                //     ref.read(appParamProvider.notifier).setCurrentZoom(zoom: position.zoom);
-                //   }
-                // },
-//                onTap: (TapPosition tapPosition, LatLng latlng) => setState(() => tappedPoints.add(latlng)),
               ),
               children: <Widget>[
                 TileLayer(
@@ -166,34 +152,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
             Positioned(
-                child: IconButton(
-                    onPressed: () {
-                      print(nearStationList.length);
+              child: IconButton(
+                onPressed: () {
+                  final AppParamState appParamState = ref.watch(appParamProvider);
 
-                      for (final LatLng element in nearStationList) {
-                        if (stationMap['${element.latitude}|${element.longitude}'] != null) {
-                          print(stationMap['${element.latitude}|${element.longitude}']!.stationName);
+                  Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.2);
 
-                          final String di = utility.calcDistance(
-                              originLat: spotLatitude,
-                              originLng: spotLongitude,
-                              destLat: element.latitude,
-                              destLng: element.longitude);
+                  if (appParamState.overlayPosition != null) {
+                    initialPosition = appParamState.overlayPosition!;
+                  }
 
-                          final double dis = di.toDouble() * 1000;
+                  for (final LatLng element in nearStationList) {
+                    if (stationMap['${element.latitude}|${element.longitude}'] != null) {
+                      final String di = utility.calcDistance(
+                          originLat: spotLatitude,
+                          originLng: spotLongitude,
+                          destLat: element.latitude,
+                          destLng: element.longitude);
 
-                          final StationModel station = stationMap['${element.latitude}|${element.longitude}']!;
+                      final double dis = di.toDouble() * 1000;
 
-                          final StationExtendsModel stationExtendsModel =
-                              StationExtendsModel.fromStation(station: station, distance: dis);
+                      final StationModel station = stationMap['${element.latitude}|${element.longitude}']!;
 
-                          ref
-                              .read(nearStationProvider.notifier)
-                              .setStationExtendsList(stationExtendsModel: stationExtendsModel);
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.ac_unit, color: Colors.black))),
+                      final StationExtendsModel stationExtendsModel =
+                          StationExtendsModel.fromStation(station: station, distance: dis);
+
+                      ref
+                          .read(nearStationProvider.notifier)
+                          .setStationExtendsList(stationExtendsModel: stationExtendsModel);
+
+                      const double height = 220;
+
+                      addFirstOverlay(
+                        context: context,
+                        firstEntries: _firstEntries,
+                        setStateCallback: setState,
+                        width: context.screenSize.width * 0.5,
+                        height: height,
+                        color: Colors.blueGrey.withOpacity(0.3),
+                        initialPosition: initialPosition,
+                        widget: Consumer(
+                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                            return nearStationDisplayParts(
+                                context: context, ref: ref, from: 'HomeScreen', height: height);
+                          },
+                        ),
+                        onPositionChanged: (Offset newPos) =>
+                            ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                        secondEntries: _secondEntries,
+                        ref: ref,
+                        from: 'NotReachTempleMapAlert',
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.ac_unit, color: Colors.black),
+              ),
+            ),
             Positioned(
               bottom: 5,
               right: 5,
