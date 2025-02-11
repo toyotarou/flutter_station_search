@@ -127,6 +127,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (selectedLineNumber != '') {
       makeLineStationMarkerList();
+    } else {
+      lineStationMarkerList.clear();
+      linePolylineList.clear();
     }
 
     return Scaffold(

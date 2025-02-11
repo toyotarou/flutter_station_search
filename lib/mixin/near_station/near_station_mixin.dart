@@ -106,7 +106,15 @@ mixin NearStationMixin {
                     Container(),
                     Container(
                       alignment: Alignment.topRight,
-                      child: Text('${element.distance.toStringAsFixed(0)} m'),
+                      child: Text(
+                        '${element.distance.toStringAsFixed(0)} m',
+                        style: TextStyle(
+                            color: ((selectedStationLatLng != null) &&
+                                    ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
+                                        (selectedStationLatLng.longitude == element.lng.toDouble())))
+                                ? Colors.yellowAccent
+                                : Colors.white),
+                      ),
                     ),
                   ],
                 ),
