@@ -192,6 +192,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       spotLatitude: spotLatitude,
                                       spotLongitude: spotLongitude,
                                       stationModelList: stationModelList,
+                                      setDefaultBoundsMap: setDefaultBoundsMap,
                                     );
                                   },
                                 ),
@@ -241,5 +242,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
+  }
+
+  ///
+  void setDefaultBoundsMap() {
+    final LatLng? selectedStationLatLng =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
+
+    if (selectedStationLatLng != null) {
+      final LatLngBounds bounds =
+          LatLngBounds.fromPoints(<LatLng>[LatLng(spotLatitude, spotLongitude), selectedStationLatLng]);
+
+      final CameraFit cameraFit = CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(50));
+
+      mapController.fitCamera(cameraFit);
+
+      final double newZoom = mapController.camera.zoom;
+
+      ref.read(appParamProvider.notifier).setCurrentZoom(zoom: newZoom);
+    }
   }
 }

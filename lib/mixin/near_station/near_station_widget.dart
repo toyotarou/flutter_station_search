@@ -13,7 +13,8 @@ class NearStationWidget extends ConsumerWidget with NearStationMixin {
       required this.from,
       required this.stationModelList,
       required this.spotLatitude,
-      required this.spotLongitude});
+      required this.spotLongitude,
+      required this.setDefaultBoundsMap});
 
   final BuildContext context;
   final WidgetRef ref;
@@ -22,6 +23,7 @@ class NearStationWidget extends ConsumerWidget with NearStationMixin {
   final double spotLatitude;
   final double spotLongitude;
   final List<StationModel> stationModelList;
+  final VoidCallback setDefaultBoundsMap;
 
   ///
   @override
@@ -34,6 +36,7 @@ class NearStationWidget extends ConsumerWidget with NearStationMixin {
       spotLatitude: spotLatitude,
       spotLongitude: spotLongitude,
       stationModelList: stationModelList,
+      setDefaultBoundsMap: setDefaultBoundsMap,
     );
   }
 }

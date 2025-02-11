@@ -22,6 +22,7 @@ mixin _$AppParamState {
       throw _privateConstructorUsedError;
   Offset? get overlayPosition => throw _privateConstructorUsedError;
   LatLng? get selectedStationLatLng => throw _privateConstructorUsedError;
+  double get currentZoom => throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,7 +42,8 @@ abstract class $AppParamStateCopyWith<$Res> {
       List<OverlayEntry>? secondEntries,
       void Function(void Function())? setStateCallback,
       Offset? overlayPosition,
-      LatLng? selectedStationLatLng});
+      LatLng? selectedStationLatLng,
+      double currentZoom});
 }
 
 /// @nodoc
@@ -64,6 +66,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? setStateCallback = freezed,
     Object? overlayPosition = freezed,
     Object? selectedStationLatLng = freezed,
+    Object? currentZoom = null,
   }) {
     return _then(_value.copyWith(
       firstEntries: freezed == firstEntries
@@ -86,6 +89,10 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.selectedStationLatLng
           : selectedStationLatLng // ignore: cast_nullable_to_non_nullable
               as LatLng?,
+      currentZoom: null == currentZoom
+          ? _value.currentZoom
+          : currentZoom // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       List<OverlayEntry>? secondEntries,
       void Function(void Function())? setStateCallback,
       Offset? overlayPosition,
-      LatLng? selectedStationLatLng});
+      LatLng? selectedStationLatLng,
+      double currentZoom});
 }
 
 /// @nodoc
@@ -124,6 +132,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? setStateCallback = freezed,
     Object? overlayPosition = freezed,
     Object? selectedStationLatLng = freezed,
+    Object? currentZoom = null,
   }) {
     return _then(_$AppParamStateImpl(
       firstEntries: freezed == firstEntries
@@ -146,6 +155,10 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.selectedStationLatLng
           : selectedStationLatLng // ignore: cast_nullable_to_non_nullable
               as LatLng?,
+      currentZoom: null == currentZoom
+          ? _value.currentZoom
+          : currentZoom // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -158,7 +171,8 @@ class _$AppParamStateImpl implements _AppParamState {
       final List<OverlayEntry>? secondEntries,
       this.setStateCallback,
       this.overlayPosition,
-      this.selectedStationLatLng})
+      this.selectedStationLatLng,
+      this.currentZoom = 0})
       : _firstEntries = firstEntries,
         _secondEntries = secondEntries;
 
@@ -188,10 +202,13 @@ class _$AppParamStateImpl implements _AppParamState {
   final Offset? overlayPosition;
   @override
   final LatLng? selectedStationLatLng;
+  @override
+  @JsonKey()
+  final double currentZoom;
 
   @override
   String toString() {
-    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng)';
+    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng, currentZoom: $currentZoom)';
   }
 
   @override
@@ -208,7 +225,9 @@ class _$AppParamStateImpl implements _AppParamState {
             (identical(other.overlayPosition, overlayPosition) ||
                 other.overlayPosition == overlayPosition) &&
             (identical(other.selectedStationLatLng, selectedStationLatLng) ||
-                other.selectedStationLatLng == selectedStationLatLng));
+                other.selectedStationLatLng == selectedStationLatLng) &&
+            (identical(other.currentZoom, currentZoom) ||
+                other.currentZoom == currentZoom));
   }
 
   @override
@@ -218,7 +237,8 @@ class _$AppParamStateImpl implements _AppParamState {
       const DeepCollectionEquality().hash(_secondEntries),
       setStateCallback,
       overlayPosition,
-      selectedStationLatLng);
+      selectedStationLatLng,
+      currentZoom);
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -235,7 +255,8 @@ abstract class _AppParamState implements AppParamState {
       final List<OverlayEntry>? secondEntries,
       final void Function(void Function())? setStateCallback,
       final Offset? overlayPosition,
-      final LatLng? selectedStationLatLng}) = _$AppParamStateImpl;
+      final LatLng? selectedStationLatLng,
+      final double currentZoom}) = _$AppParamStateImpl;
 
   @override
   List<OverlayEntry>? get firstEntries;
@@ -247,6 +268,8 @@ abstract class _AppParamState implements AppParamState {
   Offset? get overlayPosition;
   @override
   LatLng? get selectedStationLatLng;
+  @override
+  double get currentZoom;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.

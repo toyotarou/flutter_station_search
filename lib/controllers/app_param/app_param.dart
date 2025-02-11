@@ -17,6 +17,7 @@ class AppParamState with _$AppParamState {
     void Function(VoidCallback fn)? setStateCallback,
     Offset? overlayPosition,
     LatLng? selectedStationLatLng,
+    @Default(0) double currentZoom,
   }) = _AppParamState;
 }
 
@@ -41,4 +42,7 @@ class AppParam extends _$AppParam {
 
   ///
   void setSelectedStationLatLng({required LatLng latlng}) => state = state.copyWith(selectedStationLatLng: latlng);
+
+  ///
+  void setCurrentZoom({required double zoom}) => state = state.copyWith(currentZoom: zoom);
 }

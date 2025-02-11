@@ -17,7 +17,8 @@ mixin NearStationMixin {
       required double height,
       required List<StationModel> stationModelList,
       required double spotLatitude,
-      required double spotLongitude}) {
+      required double spotLongitude,
+      required VoidCallback setDefaultBoundsMap}) {
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 12),
       child: Column(
@@ -30,6 +31,7 @@ mixin NearStationMixin {
               spotLatitude: spotLatitude,
               spotLongitude: spotLongitude,
               stationModelList: stationModelList,
+              setDefaultBoundsMap: setDefaultBoundsMap,
             ),
           ),
         ],
@@ -42,7 +44,8 @@ mixin NearStationMixin {
       {required WidgetRef ref,
       required List<StationModel> stationModelList,
       required double spotLatitude,
-      required double spotLongitude}) {
+      required double spotLongitude,
+      required VoidCallback setDefaultBoundsMap}) {
     final Utility utility = Utility();
 
     final List<Widget> list = <Widget>[];
@@ -77,6 +80,8 @@ mixin NearStationMixin {
                         ref
                             .read(appParamProvider.notifier)
                             .setSelectedStationLatLng(latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
+
+                        setDefaultBoundsMap();
                       },
                       child: Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
                     ),
