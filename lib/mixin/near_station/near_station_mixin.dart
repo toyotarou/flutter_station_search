@@ -103,7 +103,14 @@ mixin NearStationMixin {
                   children: <Widget>[
                     Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
                     const SizedBox(width: 10),
-                    Icon(Icons.train, color: Colors.white.withOpacity(0.5)),
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: element.lineNumber);
+
+                        setDefaultBoundsMap();
+                      },
+                      child: Icon(Icons.train, color: Colors.white.withOpacity(0.5)),
+                    ),
                   ],
                 ),
               ],

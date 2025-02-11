@@ -18,6 +18,7 @@ class AppParamState with _$AppParamState {
     Offset? overlayPosition,
     LatLng? selectedStationLatLng,
     @Default(0) double currentZoom,
+    @Default('') String selectedLineNumber,
   }) = _AppParamState;
 }
 
@@ -45,4 +46,7 @@ class AppParam extends _$AppParam {
 
   ///
   void setCurrentZoom({required double zoom}) => state = state.copyWith(currentZoom: zoom);
+
+  ///
+  void setSelectedLineNumber({required String lineNumber}) => state = state.copyWith(selectedLineNumber: lineNumber);
 }

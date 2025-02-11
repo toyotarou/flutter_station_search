@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +39,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
   List<StationModel> stationModelList = <StationModel>[];
+
+  List<Marker> lineStationMarkerList = <Marker>[];
+
+  List<LatLng> linePolylineList = <LatLng>[];
 
   ///
   Future<void> _getCurrentLocation() async {
@@ -116,6 +122,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final LatLng? selectedStationLatLng =
         ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
 
+    final String selectedLineNumber =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
+
+    if (selectedLineNumber != '') {
+      makeLineStationMarkerList();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -153,16 +166,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     polylines: <Polyline<Object>>[
                       // ignore: always_specify_types
                       Polyline(
-                        points: <LatLng>[
-                          LatLng(spotLatitude, spotLongitude),
-                          selectedStationLatLng,
-                        ],
+                        points: <LatLng>[LatLng(spotLatitude, spotLongitude), selectedStationLatLng],
                         color: Colors.redAccent.withOpacity(0.4),
                         strokeWidth: 5,
                       ),
+
+                      if (linePolylineList.isNotEmpty) ...<Polyline<Object>>[
+                        // ignore: always_specify_types
+                        Polyline(points: linePolylineList, color: Colors.green.withOpacity(0.4), strokeWidth: 10),
+                      ],
                     ],
                   ),
                 ],
+                if (lineStationMarkerList.isNotEmpty) ...<Widget>[MarkerLayer(markers: lineStationMarkerList)],
               ],
             ),
             if (spotLatitude > 0 && spotLongitude > 0) ...<Widget>[
@@ -266,8 +282,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
 
     if (selectedStationLatLng != null) {
-      final LatLngBounds bounds =
+      LatLngBounds bounds =
           LatLngBounds.fromPoints(<LatLng>[LatLng(spotLatitude, spotLongitude), selectedStationLatLng]);
+
+      final String selectedLineNumber =
+          ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
+
+      if (selectedLineNumber != '') {
+        final List<double> latList = <double>[];
+        final List<double> lngList = <double>[];
+
+        double minLat = 0.0;
+        double maxLat = 0.0;
+        double minLng = 0.0;
+        double maxLng = 0.0;
+
+        ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
+          if (element.lineNumber == selectedLineNumber) {
+            latList.add(element.lat.toDouble());
+            lngList.add(element.lng.toDouble());
+          }
+        });
+
+        if (latList.isNotEmpty && lngList.isNotEmpty) {
+          minLat = latList.reduce(min);
+          maxLat = latList.reduce(max);
+          minLng = lngList.reduce(min);
+          maxLng = lngList.reduce(max);
+        }
+
+        bounds = LatLngBounds.fromPoints(<LatLng>[LatLng(minLat, maxLng), LatLng(maxLat, minLng)]);
+      }
 
       final CameraFit cameraFit = CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(50));
 
@@ -276,6 +321,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final double newZoom = mapController.camera.zoom;
 
       ref.read(appParamProvider.notifier).setCurrentZoom(zoom: newZoom);
+    }
+  }
+
+  ///
+  void makeLineStationMarkerList() {
+    lineStationMarkerList.clear();
+
+    final String selectedLineNumber =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
+
+    if (selectedLineNumber != '') {
+      ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
+        if (element.lineNumber == selectedLineNumber) {
+          lineStationMarkerList.add(
+            Marker(
+              point: LatLng(element.lat.toDouble(), element.lng.toDouble()),
+              child: const Icon(Icons.location_on, color: Colors.green),
+            ),
+          );
+        }
+      });
+    }
+
+    makeLinePolylineList(selectedLineNumber: selectedLineNumber);
+  }
+
+  ///
+  void makeLinePolylineList({required String selectedLineNumber}) {
+    linePolylineList.clear();
+
+    if (selectedLineNumber != '') {
+      ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
+        if (element.lineNumber == selectedLineNumber) {
+          linePolylineList.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
+        }
+      });
     }
   }
 }
