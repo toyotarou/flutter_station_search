@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controllers/near_station/near_station.dart';
+import '../../extensions/extensions.dart';
 import '../../models/station_extends_model.dart';
+import '../../models/station_model.dart';
+import '../../utility/utility.dart';
 
 mixin NearStationMixin {
-  /// 近隣駅の表示パーツを作成する
-  Widget nearStationDisplayParts({
-    required WidgetRef ref,
-    required BuildContext context,
-    required String from,
-    required double height,
-  }) {
+  ///
+  Widget nearStationDisplayParts(
+      {required WidgetRef ref,
+      required BuildContext context,
+      required String from,
+      required double height,
+      required List<StationModel> stationModelList,
+      required double spotLatitude,
+      required double spotLongitude}) {
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 12),
       child: Column(
@@ -19,44 +23,77 @@ mixin NearStationMixin {
         children: <Widget>[
           SizedBox(
             height: height - 60,
-            child: displayNearStationList(ref: ref),
+            child: displayNearStationList(
+              ref: ref,
+              spotLatitude: spotLatitude,
+              spotLongitude: spotLongitude,
+              stationModelList: stationModelList,
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// 近隣駅リストを表示するウィジェットを作成する
-  Widget displayNearStationList({required WidgetRef ref}) {
+  ///
+  Widget displayNearStationList(
+      {required WidgetRef ref,
+      required List<StationModel> stationModelList,
+      required double spotLatitude,
+      required double spotLongitude}) {
+    final Utility utility = Utility();
+
     final List<Widget> list = <Widget>[];
 
-    final List<StationExtendsModel> stationExtendsList =
-        ref.watch(nearStationProvider.select((NearStationState value) => value.stationExtendsList));
+    final List<StationExtendsModel> list2 = <StationExtendsModel>[];
 
-    // リストのコピー作成（ソート用）
-    final List<StationExtendsModel> stationExList = <StationExtendsModel>[];
-    // ignore: prefer_foreach
-    for (final StationExtendsModel element in stationExtendsList) {
-      stationExList.add(element);
+    for (final StationModel element in stationModelList) {
+      final String di = utility.calcDistance(
+          originLat: spotLatitude,
+          originLng: spotLongitude,
+          destLat: element.lat.toDouble(),
+          destLng: element.lng.toDouble());
+
+      final double dis = di.toDouble() * 1000;
+
+      list2.add(StationExtendsModel.fromStation(station: element, distance: dis));
     }
 
-    // 距離順にソートし、Rowウィジェットとしてリストに追加
-    stationExList
+    list2
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance))
       ..forEach((StationExtendsModel element) {
         list.add(
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(element.stationName),
-              Text(element.distance.toStringAsFixed(2)),
-            ],
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(element.stationName)),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.topRight,
+                        child: Text('${element.distance.toStringAsFixed(0)} m'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(),
+                    Text(element.lineName),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       });
 
-    return SingleChildScrollView(
-      child: Column(children: list),
-    );
+    return SingleChildScrollView(child: Column(children: list));
   }
 }

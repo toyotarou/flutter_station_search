@@ -1,6 +1,5 @@
 enum APIPath {
   getAllStation,
-  getTokyoTrainStation,
 }
 
 extension APIPathExtension on APIPath {
@@ -8,9 +7,6 @@ extension APIPathExtension on APIPath {
     switch (this) {
       case APIPath.getAllStation:
         return 'getAllStation';
-
-      case APIPath.getTokyoTrainStation:
-        return 'getTokyoTrainStation';
     }
   }
 }

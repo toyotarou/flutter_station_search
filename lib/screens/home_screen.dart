@@ -5,12 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../controllers/app_param/app_param.dart';
-import '../controllers/near_station/near_station.dart';
 import '../controllers/station/station.dart';
-import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
-import '../models/station_extends_model.dart';
 import '../models/station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
@@ -39,6 +36,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
+  List<StationModel> stationModelList = <StationModel>[];
+
   ///
   Future<void> _getCurrentLocation() async {
     try {
@@ -61,9 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           final double dis = di.toDouble() * 1000;
 
           if (dis <= 2000) {
-            ref
-                .read(nearStationProvider.notifier)
-                .setNearStationList(latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
+            stationModelList.add(element);
           }
         });
       });
@@ -110,19 +107,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
-    ref.read(tokyoTrainProvider.notifier).getTokyoTrainData();
-
     ref.read(stationProvider.notifier).getStationData();
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    final List<LatLng> nearStationList =
-        ref.watch(nearStationProvider.select((NearStationState value) => value.nearStationList));
-
-    final Map<String, StationModel> stationMap =
-        ref.watch(stationProvider.select((StationState value) => value.stationMap));
+    ref.watch(stationProvider.select((StationState value) => value.stationMap));
 
     return Scaffold(
       body: SafeArea(
@@ -162,48 +153,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     initialPosition = appParamState.overlayPosition!;
                   }
 
-                  for (final LatLng element in nearStationList) {
-                    if (stationMap['${element.latitude}|${element.longitude}'] != null) {
-                      final String di = utility.calcDistance(
-                          originLat: spotLatitude,
-                          originLng: spotLongitude,
-                          destLat: element.latitude,
-                          destLng: element.longitude);
+                  const double height = 300;
 
-                      final double dis = di.toDouble() * 1000;
-
-                      final StationModel station = stationMap['${element.latitude}|${element.longitude}']!;
-
-                      final StationExtendsModel stationExtendsModel =
-                          StationExtendsModel.fromStation(station: station, distance: dis);
-
-                      ref
-                          .read(nearStationProvider.notifier)
-                          .setStationExtendsList(stationExtendsModel: stationExtendsModel);
-
-                      const double height = 220;
-
-                      addFirstOverlay(
-                        context: context,
-                        firstEntries: _firstEntries,
-                        setStateCallback: setState,
-                        width: context.screenSize.width * 0.5,
-                        height: height,
-                        color: Colors.blueGrey.withOpacity(0.3),
-                        initialPosition: initialPosition,
-                        widget: Consumer(
-                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                            return NearStationWidget(context: context, ref: ref, from: 'HomeScreen', height: height);
-                          },
-                        ),
-                        onPositionChanged: (Offset newPos) =>
-                            ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
-                        secondEntries: _secondEntries,
-                        ref: ref,
-                        from: 'HomeScreen',
-                      );
-                    }
-                  }
+                  addFirstOverlay(
+                    context: context,
+                    firstEntries: _firstEntries,
+                    setStateCallback: setState,
+                    width: context.screenSize.width * 0.5,
+                    height: height,
+                    color: Colors.blueGrey.withOpacity(0.3),
+                    initialPosition: initialPosition,
+                    widget: Consumer(
+                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                        return NearStationWidget(
+                          context: context,
+                          ref: ref,
+                          from: 'HomeScreen',
+                          height: height,
+                          spotLatitude: spotLatitude,
+                          spotLongitude: spotLongitude,
+                          stationModelList: stationModelList,
+                        );
+                      },
+                    ),
+                    onPositionChanged: (Offset newPos) =>
+                        ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                    secondEntries: _secondEntries,
+                    ref: ref,
+                    from: 'HomeScreen',
+                  );
                 },
                 icon: const Icon(Icons.ac_unit, color: Colors.black),
               ),

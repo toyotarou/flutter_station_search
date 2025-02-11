@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_dynamic_calls
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,12 +37,13 @@ class Station extends _$Station {
       final List<StationModel> list = <StationModel>[];
       final Map<String, StationModel> map = <String, StationModel>{};
 
+      // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final StationModel val = StationModel.fromJson(
-          value['data'][i] as Map<String, dynamic>,
-        );
+        // ignore: avoid_dynamic_calls
+        final StationModel val = StationModel.fromJson(value['data'][i] as Map<String, dynamic>);
 
         list.add(val);
+
         map['${val.lat}|${val.lng}'] = val;
       }
 
