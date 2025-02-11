@@ -195,6 +195,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
                           child: IconButton(
                             onPressed: () {
+                              ref.read(appParamProvider.notifier).clearSelectedStationLatLng();
+
+                              ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: '');
+
                               final AppParamState appParamState = ref.watch(appParamProvider);
 
                               Offset initialPosition =

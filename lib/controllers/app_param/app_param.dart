@@ -45,6 +45,9 @@ class AppParam extends _$AppParam {
   void setSelectedStationLatLng({required LatLng latlng}) => state = state.copyWith(selectedStationLatLng: latlng);
 
   ///
+  void clearSelectedStationLatLng() => state = state.copyWith(selectedStationLatLng: null);
+
+  ///
   void setCurrentZoom({required double zoom}) => state = state.copyWith(currentZoom: zoom);
 
   ///

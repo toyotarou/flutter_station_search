@@ -64,6 +64,12 @@ mixin NearStationMixin {
       list2.add(StationExtendsModel.fromStation(station: element, distance: dis));
     }
 
+    final LatLng? selectedStationLatLng =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
+
+    final String selectedLineNumber =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
+
     list2
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance))
       ..forEach((StationExtendsModel element) {
@@ -83,7 +89,12 @@ mixin NearStationMixin {
 
                         setDefaultBoundsMap();
                       },
-                      child: Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
+                      child: Icon(Icons.location_on,
+                          color: ((selectedStationLatLng != null) &&
+                                  ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
+                                      (selectedStationLatLng.longitude == element.lng.toDouble())))
+                              ? Colors.yellowAccent.withOpacity(0.5)
+                              : Colors.white.withOpacity(0.5)),
                     ),
                     const SizedBox(width: 10),
                     Expanded(child: Text(element.stationName, maxLines: 1, overflow: TextOverflow.ellipsis)),
@@ -103,13 +114,32 @@ mixin NearStationMixin {
                   children: <Widget>[
                     Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
                     const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: element.lineNumber);
+                    Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: element.lineNumber);
 
-                        setDefaultBoundsMap();
-                      },
-                      child: Icon(Icons.train, color: Colors.white.withOpacity(0.5)),
+                            setDefaultBoundsMap();
+                          },
+                          child: Icon(Icons.train,
+                              color: (element.lineNumber == selectedLineNumber)
+                                  ? Colors.yellowAccent.withOpacity(0.5)
+                                  : Colors.white.withOpacity(0.5)),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: '');
+
+                            setDefaultBoundsMap();
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
