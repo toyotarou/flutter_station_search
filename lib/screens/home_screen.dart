@@ -147,6 +147,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ],
                   ),
+                if ((spotLatitude > 0 && spotLongitude > 0) && (selectedStationLatLng != null)) ...<Widget>[
+                  // ignore: always_specify_types
+                  PolylineLayer(
+                    polylines: <Polyline<Object>>[
+                      // ignore: always_specify_types
+                      Polyline(
+                        points: <LatLng>[
+                          LatLng(spotLatitude, spotLongitude),
+                          selectedStationLatLng,
+                        ],
+                        color: Colors.redAccent.withOpacity(0.4),
+                        strokeWidth: 5,
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
             if (spotLatitude > 0 && spotLongitude > 0) ...<Widget>[
