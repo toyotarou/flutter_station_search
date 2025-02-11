@@ -149,48 +149,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                final AppParamState appParamState = ref.watch(appParamProvider);
+            if (spotLatitude > 0 && spotLongitude > 0) ...<Widget>[
+              Positioned(
+                top: 5,
+                left: 5,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                          child: IconButton(
+                            onPressed: () {
+                              final AppParamState appParamState = ref.watch(appParamProvider);
 
-                Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
+                              Offset initialPosition =
+                                  Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
 
-                if (appParamState.overlayPosition != null) {
-                  initialPosition = appParamState.overlayPosition!;
-                }
+                              if (appParamState.overlayPosition != null) {
+                                initialPosition = appParamState.overlayPosition!;
+                              }
 
-                const double height = 300;
+                              const double height = 300;
 
-                addFirstOverlay(
-                  context: context,
-                  firstEntries: _firstEntries,
-                  setStateCallback: setState,
-                  width: context.screenSize.width * 0.5,
-                  height: height,
-                  color: Colors.blueGrey.withOpacity(0.3),
-                  initialPosition: initialPosition,
-                  widget: Consumer(
-                    builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                      return NearStationWidget(
-                        context: context,
-                        ref: ref,
-                        from: 'HomeScreen',
-                        height: height,
-                        spotLatitude: spotLatitude,
-                        spotLongitude: spotLongitude,
-                        stationModelList: stationModelList,
-                      );
-                    },
-                  ),
-                  onPositionChanged: (Offset newPos) =>
-                      ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
-                  secondEntries: _secondEntries,
-                  ref: ref,
-                  from: 'HomeScreen',
-                );
-              },
-              icon: const Icon(Icons.train, color: Colors.black),
-            ),
+                              addFirstOverlay(
+                                context: context,
+                                firstEntries: _firstEntries,
+                                setStateCallback: setState,
+                                width: context.screenSize.width * 0.5,
+                                height: height,
+                                color: Colors.blueGrey.withOpacity(0.3),
+                                initialPosition: initialPosition,
+                                widget: Consumer(
+                                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                                    return NearStationWidget(
+                                      context: context,
+                                      ref: ref,
+                                      from: 'HomeScreen',
+                                      height: height,
+                                      spotLatitude: spotLatitude,
+                                      spotLongitude: spotLongitude,
+                                      stationModelList: stationModelList,
+                                    );
+                                  },
+                                ),
+                                onPositionChanged: (Offset newPos) =>
+                                    ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                                secondEntries: _secondEntries,
+                                ref: ref,
+                                from: 'HomeScreen',
+                              );
+                            },
+                            icon: const Icon(Icons.train),
+                          ),
+                        ),
+                        Container(),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
             Positioned(
               bottom: 5,
               right: 5,
