@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
+import '../../controllers/app_param/app_param.dart';
 import '../../extensions/extensions.dart';
 import '../../models/station_extends_model.dart';
 import '../../models/station_model.dart';
@@ -70,22 +72,33 @@ mixin NearStationMixin {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(element.stationName)),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.topRight,
-                        child: Text('${element.distance.toStringAsFixed(0)} m'),
-                      ),
+                    GestureDetector(
+                      onTap: () {
+                        ref
+                            .read(appParamProvider.notifier)
+                            .setSelectedStationLatLng(latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
+                      },
+                      child: Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
                     ),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(element.stationName, maxLines: 1, overflow: TextOverflow.ellipsis)),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(),
-                    Text(element.lineName),
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: Text('${element.distance.toStringAsFixed(0)} m'),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
+                    const SizedBox(width: 10),
+                    Icon(Icons.train, color: Colors.white.withOpacity(0.5)),
                   ],
                 ),
               ],

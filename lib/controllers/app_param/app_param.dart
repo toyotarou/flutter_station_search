@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../utility/utility.dart';
@@ -15,6 +16,7 @@ class AppParamState with _$AppParamState {
     List<OverlayEntry>? secondEntries,
     void Function(VoidCallback fn)? setStateCallback,
     Offset? overlayPosition,
+    LatLng? selectedStationLatLng,
   }) = _AppParamState;
 }
 
@@ -36,4 +38,7 @@ class AppParam extends _$AppParam {
 
   ///
   void updateOverlayPosition(Offset newPos) => state = state.copyWith(overlayPosition: newPos);
+
+  ///
+  void setSelectedStationLatLng({required LatLng latlng}) => state = state.copyWith(selectedStationLatLng: latlng);
 }

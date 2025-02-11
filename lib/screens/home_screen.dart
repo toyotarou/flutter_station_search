@@ -113,7 +113,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ///
   @override
   Widget build(BuildContext context) {
-    ref.watch(stationProvider.select((StationState value) => value.stationMap));
+    final LatLng? selectedStationLatLng =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
 
     return Scaffold(
       body: SafeArea(
@@ -138,53 +139,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         point: LatLng(spotLatitude, spotLongitude),
                         child: const Icon(Icons.location_on, color: Colors.redAccent),
                       ),
+                      if (selectedStationLatLng != null) ...<Marker>[
+                        Marker(
+                          point: selectedStationLatLng,
+                          child: const Icon(Icons.location_on, color: Colors.blueAccent),
+                        ),
+                      ],
                     ],
                   ),
               ],
             ),
-            Positioned(
-              child: IconButton(
-                onPressed: () {
-                  final AppParamState appParamState = ref.watch(appParamProvider);
+            IconButton(
+              onPressed: () {
+                final AppParamState appParamState = ref.watch(appParamProvider);
 
-                  Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
+                Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
 
-                  if (appParamState.overlayPosition != null) {
-                    initialPosition = appParamState.overlayPosition!;
-                  }
+                if (appParamState.overlayPosition != null) {
+                  initialPosition = appParamState.overlayPosition!;
+                }
 
-                  const double height = 300;
+                const double height = 300;
 
-                  addFirstOverlay(
-                    context: context,
-                    firstEntries: _firstEntries,
-                    setStateCallback: setState,
-                    width: context.screenSize.width * 0.5,
-                    height: height,
-                    color: Colors.blueGrey.withOpacity(0.3),
-                    initialPosition: initialPosition,
-                    widget: Consumer(
-                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                        return NearStationWidget(
-                          context: context,
-                          ref: ref,
-                          from: 'HomeScreen',
-                          height: height,
-                          spotLatitude: spotLatitude,
-                          spotLongitude: spotLongitude,
-                          stationModelList: stationModelList,
-                        );
-                      },
-                    ),
-                    onPositionChanged: (Offset newPos) =>
-                        ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
-                    secondEntries: _secondEntries,
-                    ref: ref,
-                    from: 'HomeScreen',
-                  );
-                },
-                icon: const Icon(Icons.ac_unit, color: Colors.black),
-              ),
+                addFirstOverlay(
+                  context: context,
+                  firstEntries: _firstEntries,
+                  setStateCallback: setState,
+                  width: context.screenSize.width * 0.5,
+                  height: height,
+                  color: Colors.blueGrey.withOpacity(0.3),
+                  initialPosition: initialPosition,
+                  widget: Consumer(
+                    builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                      return NearStationWidget(
+                        context: context,
+                        ref: ref,
+                        from: 'HomeScreen',
+                        height: height,
+                        spotLatitude: spotLatitude,
+                        spotLongitude: spotLongitude,
+                        stationModelList: stationModelList,
+                      );
+                    },
+                  ),
+                  onPositionChanged: (Offset newPos) =>
+                      ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                  secondEntries: _secondEntries,
+                  ref: ref,
+                  from: 'HomeScreen',
+                );
+              },
+              icon: const Icon(Icons.train, color: Colors.black),
             ),
             Positioned(
               bottom: 5,
