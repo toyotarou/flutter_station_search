@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/app_param/app_param.dart';
+import '../../controllers/near_station/near_station.dart';
 
 //=======================================================//
 
@@ -146,17 +147,11 @@ void addFirstOverlay({
     height: height,
     color: color,
     onRemove: () {
-      // if (from == 'NotReachTempleMapAlert') {
-      //   if (ref != null) {
-      //     ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
-      //   }
-      // }
-      //
-      // if (from == 'VisitedTempleMapAlert') {
-      //   if (ref != null) {
-      //     ref.read(templeProvider.notifier).setSelectTemple(name: '', lat: '', lng: '');
-      //   }
-      // }
+      if (from == 'HomeScreen') {
+        if (ref != null) {
+          ref.read(nearStationProvider.notifier).clearStationExtendsList();
+        }
+      }
 
       entry.remove();
       setStateCallback(() => firstEntries.remove(entry));

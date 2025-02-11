@@ -9,11 +9,11 @@ import '../controllers/near_station/near_station.dart';
 import '../controllers/station/station.dart';
 import '../controllers/tokyo_train/tokyo_train.dart';
 import '../extensions/extensions.dart';
+import '../mixin/near_station/near_station_widget.dart';
 import '../models/station_extends_model.dart';
 import '../models/station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
-import 'parts/near_station_display_parts.dart';
 import 'parts/station_search_overlay.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -156,7 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onPressed: () {
                   final AppParamState appParamState = ref.watch(appParamProvider);
 
-                  Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.2);
+                  Offset initialPosition = Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
 
                   if (appParamState.overlayPosition != null) {
                     initialPosition = appParamState.overlayPosition!;
@@ -193,15 +193,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         initialPosition: initialPosition,
                         widget: Consumer(
                           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                            return nearStationDisplayParts(
-                                context: context, ref: ref, from: 'HomeScreen', height: height);
+                            return NearStationWidget(context: context, ref: ref, from: 'HomeScreen', height: height);
                           },
                         ),
                         onPositionChanged: (Offset newPos) =>
                             ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
                         secondEntries: _secondEntries,
                         ref: ref,
-                        from: 'NotReachTempleMapAlert',
+                        from: 'HomeScreen',
                       );
                     }
                   }

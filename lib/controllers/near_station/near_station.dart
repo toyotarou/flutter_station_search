@@ -34,4 +34,7 @@ class NearStation extends _$NearStation {
     list.add(stationExtendsModel);
     state = state.copyWith(stationExtendsList: list);
   }
+
+  ///
+  void clearStationExtendsList() => state = state.copyWith(stationExtendsList: []);
 }
