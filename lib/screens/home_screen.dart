@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../controllers/app_param/app_param.dart';
-import '../controllers/station/station.dart';
+//import '../controllers/app_param/app_param.dart';
+import '../controllers/controllers_mixin.dart';
+
+//import '../controllers/station/station.dart';
 import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
 import '../models/station_model.dart';
@@ -22,7 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<HomeScreen> {
   String _locationMessage = '位置情報が取得されていません。';
 
   double spotLatitude = 0;
@@ -55,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
         mapController.move(LatLng(spotLatitude, spotLongitude), 13);
 
-        ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
+        for (final StationModel element in stationState.stationList) {
           final String di = utility.calcDistance(
             originLat: spotLatitude,
             originLng: spotLongitude,
@@ -68,7 +70,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           if (dis <= 2000) {
             stationModelList.add(element);
           }
-        });
+        }
       });
     } catch (e) {
       setState(() => _locationMessage = '位置情報の取得に失敗しました。\n$e');
@@ -113,19 +115,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
-    ref.read(stationProvider.notifier).getStationData();
+    stationNotifier.getStationData();
   }
 
   ///
   @override
   Widget build(BuildContext context) {
-    final LatLng? selectedStationLatLng =
-        ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
-
-    final String selectedLineNumber =
-        ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
-
-    if (selectedLineNumber != '') {
+    if (appParamState.selectedLineNumber != '') {
       makeLineStationMarkerList();
     } else {
       lineStationMarkerList.clear();
@@ -155,21 +151,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         point: LatLng(spotLatitude, spotLongitude),
                         child: const Icon(Icons.location_on, color: Colors.redAccent),
                       ),
-                      if (selectedStationLatLng != null) ...<Marker>[
+                      if (appParamState.selectedStationLatLng != null) ...<Marker>[
                         Marker(
-                          point: selectedStationLatLng,
+                          point: appParamState.selectedStationLatLng!,
                           child: const Icon(Icons.location_on, color: Colors.blueAccent),
                         ),
                       ],
                     ],
                   ),
-                if ((spotLatitude > 0 && spotLongitude > 0) && (selectedStationLatLng != null)) ...<Widget>[
+                if ((spotLatitude > 0 && spotLongitude > 0) &&
+                    (appParamState.selectedStationLatLng != null)) ...<Widget>[
                   // ignore: always_specify_types
                   PolylineLayer(
                     polylines: <Polyline<Object>>[
                       // ignore: always_specify_types
                       Polyline(
-                        points: <LatLng>[LatLng(spotLatitude, spotLongitude), selectedStationLatLng],
+                        points: <LatLng>[LatLng(spotLatitude, spotLongitude), appParamState.selectedStationLatLng!],
                         color: Colors.redAccent.withOpacity(0.4),
                         strokeWidth: 5,
                       ),
@@ -198,11 +195,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
                           child: IconButton(
                             onPressed: () {
-                              ref.read(appParamProvider.notifier).clearSelectedStationLatLng();
+                              appParamNotifier.clearSelectedStationLatLng();
 
-                              ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: '');
-
-                              final AppParamState appParamState = ref.watch(appParamProvider);
+                              appParamNotifier.setSelectedLineNumber(lineNumber: '');
 
                               Offset initialPosition =
                                   Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
@@ -235,8 +230,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     );
                                   },
                                 ),
-                                onPositionChanged: (Offset newPos) =>
-                                    ref.read(appParamProvider.notifier).updateOverlayPosition(newPos),
+                                onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
                                 secondEntries: _secondEntries,
                                 ref: ref,
                                 from: 'HomeScreen',
@@ -285,17 +279,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   ///
   void setDefaultBoundsMap() {
-    final LatLng? selectedStationLatLng =
-        ref.watch(appParamProvider.select((AppParamState value) => value.selectedStationLatLng));
-
-    if (selectedStationLatLng != null) {
+    if (appParamState.selectedStationLatLng != null) {
       LatLngBounds bounds =
-          LatLngBounds.fromPoints(<LatLng>[LatLng(spotLatitude, spotLongitude), selectedStationLatLng]);
+          LatLngBounds.fromPoints(<LatLng>[LatLng(spotLatitude, spotLongitude), appParamState.selectedStationLatLng!]);
 
-      final String selectedLineNumber =
-          ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
-
-      if (selectedLineNumber != '') {
+      if (appParamState.selectedLineNumber != '') {
         final List<double> latList = <double>[];
         final List<double> lngList = <double>[];
 
@@ -304,12 +292,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         double minLng = 0.0;
         double maxLng = 0.0;
 
-        ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
-          if (element.lineNumber == selectedLineNumber) {
+        for (final StationModel element in stationState.stationList) {
+          if (element.lineNumber == appParamState.selectedLineNumber) {
             latList.add(element.lat.toDouble());
             lngList.add(element.lng.toDouble());
           }
-        });
+        }
 
         if (latList.isNotEmpty && lngList.isNotEmpty) {
           minLat = latList.reduce(min);
@@ -327,7 +315,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       final double newZoom = mapController.camera.zoom;
 
-      ref.read(appParamProvider.notifier).setCurrentZoom(zoom: newZoom);
+      appParamNotifier.setCurrentZoom(zoom: newZoom);
     }
   }
 
@@ -335,12 +323,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void makeLineStationMarkerList() {
     lineStationMarkerList.clear();
 
-    final String selectedLineNumber =
-        ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
-
-    if (selectedLineNumber != '') {
-      ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
-        if (element.lineNumber == selectedLineNumber) {
+    if (appParamState.selectedLineNumber != '') {
+      for (final StationModel element in stationState.stationList) {
+        if (element.lineNumber == appParamState.selectedLineNumber) {
           lineStationMarkerList.add(
             Marker(
               point: LatLng(element.lat.toDouble(), element.lng.toDouble()),
@@ -348,10 +333,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           );
         }
-      });
+      }
     }
 
-    makeLinePolylineList(selectedLineNumber: selectedLineNumber);
+    makeLinePolylineList(selectedLineNumber: appParamState.selectedLineNumber);
   }
 
   ///
@@ -359,11 +344,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     linePolylineList.clear();
 
     if (selectedLineNumber != '') {
-      ref.watch(stationProvider.select((StationState value) => value.stationList)).forEach((StationModel element) {
+      for (final StationModel element in stationState.stationList) {
         if (element.lineNumber == selectedLineNumber) {
           linePolylineList.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
         }
-      });
+      }
     }
   }
 }
