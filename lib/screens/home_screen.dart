@@ -15,6 +15,8 @@ import '../mixin/near_station/near_station_widget.dart';
 import '../models/station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
+import 'components/station_search_alert.dart';
+import 'parts/station_dialog.dart';
 import 'parts/station_search_overlay.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -181,6 +183,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                 if (lineStationMarkerList.isNotEmpty) ...<Widget>[MarkerLayer(markers: lineStationMarkerList)],
               ],
             ),
+            if (spotLatitude == 0 && spotLongitude == 0) ...<Widget>[
+              Positioned(
+                top: 5,
+                right: 5,
+                child: SizedBox(
+                  width: context.screenSize.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                        child: IconButton(
+                          onPressed: () {
+                            StationDialog(
+                              context: context,
+                              widget: const StationSearchAlert(),
+                            );
+                          },
+                          icon: const Icon(Icons.search),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
             if (spotLatitude > 0 && spotLongitude > 0) ...<Widget>[
               Positioned(
                 top: 5,
