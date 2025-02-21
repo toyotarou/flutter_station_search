@@ -6,10 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-//import '../controllers/app_param/app_param.dart';
 import '../controllers/controllers_mixin.dart';
-
-//import '../controllers/station/station.dart';
 import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
 import '../models/station_model.dart';
@@ -220,54 +217,68 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
-                          child: IconButton(
-                            onPressed: () {
-                              appParamNotifier.clearSelectedStationLatLng();
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                              child: IconButton(
+                                onPressed: () {
+                                  appParamNotifier.clearSelectedStationLatLng();
 
-                              appParamNotifier.setSelectedLineNumber(lineNumber: '');
+                                  appParamNotifier.setSelectedLineNumber(lineNumber: '');
 
-                              Offset initialPosition =
-                                  Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
+                                  Offset initialPosition =
+                                      Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
 
-                              if (appParamState.overlayPosition != null) {
-                                initialPosition = appParamState.overlayPosition!;
-                              }
+                                  if (appParamState.overlayPosition != null) {
+                                    initialPosition = appParamState.overlayPosition!;
+                                  }
 
-                              const double height = 300;
+                                  const double height = 300;
 
-                              addFirstOverlay(
-                                context: context,
-                                firstEntries: _firstEntries,
-                                setStateCallback: setState,
-                                width: context.screenSize.width * 0.5,
-                                height: height,
-                                color: Colors.blueGrey.withOpacity(0.3),
-                                initialPosition: initialPosition,
-                                widget: Consumer(
-                                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                                    return NearStationWidget(
-                                      context: context,
-                                      ref: ref,
-                                      from: 'HomeScreen',
-                                      height: height,
-                                      spotLatitude: spotLatitude,
-                                      spotLongitude: spotLongitude,
-                                      stationModelList: stationModelList,
-                                      setDefaultBoundsMap: setDefaultBoundsMap,
-                                    );
-                                  },
-                                ),
-                                onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
-                                secondEntries: _secondEntries,
-                                ref: ref,
-                                from: 'HomeScreen',
-                              );
-                            },
-                            icon: const Icon(Icons.train),
-                          ),
+                                  addFirstOverlay(
+                                    context: context,
+                                    firstEntries: _firstEntries,
+                                    setStateCallback: setState,
+                                    width: context.screenSize.width * 0.5,
+                                    height: height,
+                                    color: Colors.blueGrey.withOpacity(0.3),
+                                    initialPosition: initialPosition,
+                                    widget: Consumer(
+                                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                                        return NearStationWidget(
+                                          context: context,
+                                          ref: ref,
+                                          from: 'HomeScreen',
+                                          height: height,
+                                          spotLatitude: spotLatitude,
+                                          spotLongitude: spotLongitude,
+                                          stationModelList: stationModelList,
+                                          setDefaultBoundsMap: setDefaultBoundsMap,
+                                        );
+                                      },
+                                    ),
+                                    onPositionChanged: (Offset newPos) =>
+                                        appParamNotifier.updateOverlayPosition(newPos),
+                                    secondEntries: _secondEntries,
+                                    ref: ref,
+                                    from: 'HomeScreen',
+                                  );
+                                },
+                                icon: const Icon(Icons.train),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                              child: IconButton(
+                                onPressed: () => mapController.rotate(0),
+                                icon: const Icon(Icons.local_activity),
+                              ),
+                            ),
+                          ],
                         ),
                         Container(),
                       ],

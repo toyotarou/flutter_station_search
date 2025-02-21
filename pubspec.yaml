@@ -31,6 +31,7 @@ dependencies:
   flutter_cache_manager: ^3.4.1
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.4
+  flutter_compass: ^0.8.1
 
 dev_dependencies:
   flutter_test:
