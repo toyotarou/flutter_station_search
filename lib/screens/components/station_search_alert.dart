@@ -68,7 +68,7 @@ class _StationSearchAlertState extends ConsumerState<StationSearchAlert> with Co
   ///
   Widget displayStationSearchResult() {
     if (_stationNameEditingController.text.trim().isEmpty) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     final List<Widget> list = <Widget>[];
@@ -91,13 +91,13 @@ class _StationSearchAlertState extends ConsumerState<StationSearchAlert> with Co
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(element.stationName),
-                    Container(),
+                    const SizedBox.shrink(),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(),
+                    const SizedBox.shrink(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[

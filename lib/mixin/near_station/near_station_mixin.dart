@@ -114,7 +114,7 @@ mixin NearStationMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(),
+                    const SizedBox.shrink(),
                     Container(
                       alignment: Alignment.topRight,
                       child: Text(
