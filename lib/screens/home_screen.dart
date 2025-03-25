@@ -53,26 +53,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       setState(() {
         spotLatitude = position.latitude;
         spotLongitude = position.longitude;
-
-        mapController.move(LatLng(spotLatitude, spotLongitude), 13);
-
-        for (final StationModel element in stationState.stationList) {
-          final String di = utility.calcDistance(
-            originLat: spotLatitude,
-            originLng: spotLongitude,
-            destLat: element.lat.toDouble(),
-            destLng: element.lng.toDouble(),
-          );
-
-          final double dis = di.toDouble() * 1000;
-
-          if (dis <= 2000) {
-            stationModelList.add(element);
-          }
-        }
       });
+
+      mapController.move(LatLng(spotLatitude, spotLongitude), 13);
+
+      makeStationModelList();
     } catch (e) {
       setState(() => _locationMessage = '位置情報の取得に失敗しました。\n$e');
+    }
+  }
+
+  ///
+  void makeStationModelList() {
+    for (final StationModel element in stationState.stationList) {
+      final String di = utility.calcDistance(
+        originLat: spotLatitude,
+        originLng: spotLongitude,
+        destLat: element.lat.toDouble(),
+        destLng: element.lng.toDouble(),
+      );
+
+      final double dis = di.toDouble() * 1000;
+
+      if (dis <= 2000) {
+        stationModelList.add(element);
+      }
     }
   }
 
@@ -229,7 +234,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   appParamNotifier.setSelectedLineNumber(lineNumber: '');
 
                                   Offset initialPosition =
-                                      Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.1);
+                                      Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.15);
 
                                   if (appParamState.overlayPosition != null) {
                                     initialPosition = appParamState.overlayPosition!;
@@ -275,7 +280,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
                               child: IconButton(
                                 onPressed: () => mapController.rotate(0),
-                                icon: const Icon(Icons.local_activity),
+                                icon: const Icon(Icons.compass_calibration),
                               ),
                             ),
                           ],
