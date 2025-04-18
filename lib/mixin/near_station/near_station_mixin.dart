@@ -81,91 +81,117 @@ mixin NearStationMixin {
     final String selectedLineNumber =
         ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
 
+    final List<int> keepStation = <int>[];
+
     list2
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance))
       ..forEach((StationExtendsModel element) {
-        list.add(
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 3),
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-            child: Column(
+        if (!keepStation.contains(element.id)) {
+          list.add(
+            Stack(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(appParamProvider.notifier)
-                            .setSelectedStationLatLng(latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
-
-                        setDefaultBoundsMap();
-                      },
-                      child: Icon(Icons.location_on,
-                          color: ((selectedStationLatLng != null) &&
-                                  ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
-                                      (selectedStationLatLng.longitude == element.lng.toDouble())))
-                              ? Colors.yellowAccent.withOpacity(0.5)
-                              : Colors.white.withOpacity(0.5)),
+                Positioned(
+                  top: 5,
+                  right: 5,
+                  child: Transform(
+                    transform: Matrix4.diagonal3Values(1.0, 3.0, 1.0),
+                    child: Text(
+                      element.id.toString(),
+                      style: TextStyle(color: Colors.white.withOpacity(0.6)),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(element.stationName, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                  ],
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const SizedBox.shrink(),
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        '${element.distance.toStringAsFixed(0)} m',
-                        style: TextStyle(
-                            color: ((selectedStationLatLng != null) &&
-                                    ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
-                                        (selectedStationLatLng.longitude == element.lng.toDouble())))
-                                ? Colors.yellowAccent
-                                : Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
-                    const SizedBox(width: 10),
-                    Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: element.lineNumber);
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(vertical: 2),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
+                    color: Colors.black.withOpacity(0.3),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              ref.read(appParamProvider.notifier).setSelectedStationLatLng(
+                                  latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
 
-                            setDefaultBoundsMap();
-                          },
-                          child: Icon(Icons.train,
-                              color: (element.lineNumber == selectedLineNumber)
-                                  ? Colors.yellowAccent.withOpacity(0.5)
-                                  : Colors.white.withOpacity(0.5)),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTap: () {
-                            ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: '');
-
-                            setDefaultBoundsMap();
-                          },
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white.withOpacity(0.5),
+                              setDefaultBoundsMap();
+                            },
+                            child: Icon(Icons.location_on,
+                                color: ((selectedStationLatLng != null) &&
+                                        ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
+                                            (selectedStationLatLng.longitude == element.lng.toDouble())))
+                                    ? Colors.yellowAccent.withOpacity(0.5)
+                                    : Colors.white.withOpacity(0.5)),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 10),
+                          Expanded(child: Text(element.stationName, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const SizedBox.shrink(),
+                          Container(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              '${element.distance.toStringAsFixed(0)} m',
+                              style: TextStyle(
+                                  color: ((selectedStationLatLng != null) &&
+                                          ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
+                                              (selectedStationLatLng.longitude == element.lng.toDouble())))
+                                      ? Colors.yellowAccent
+                                      : Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
+                          const SizedBox(width: 10),
+                          Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .read(appParamProvider.notifier)
+                                      .setSelectedLineNumber(lineNumber: element.lineNumber);
+
+                                  setDefaultBoundsMap();
+                                },
+                                child: Icon(Icons.train,
+                                    color: (element.lineNumber == selectedLineNumber)
+                                        ? Colors.yellowAccent.withOpacity(0.5)
+                                        : Colors.white.withOpacity(0.5)),
+                              ),
+                              const SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  ref.read(appParamProvider.notifier).setSelectedLineNumber(lineNumber: '');
+
+                                  setDefaultBoundsMap();
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        );
+          );
+        }
+
+        keepStation.add(element.id);
       });
 
     return SingleChildScrollView(child: Column(children: list));
@@ -208,8 +234,12 @@ mixin NearStationMixin {
           list3.add(element.lineName);
 
           list.add(Container(
-            padding: const EdgeInsets.symmetric(vertical: 3),
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
+              color: Colors.black.withOpacity(0.3),
+            ),
             child: Row(
               children: <Widget>[
                 GestureDetector(
