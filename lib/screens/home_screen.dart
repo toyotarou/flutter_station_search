@@ -10,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 import '../controllers/controllers_mixin.dart';
 import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
+import '../mixin/train_list/train_list_widget.dart';
 import '../models/station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
@@ -283,6 +284,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                             child: IconButton(
                               onPressed: () => mapController.rotate(0),
                               icon: const Icon(Icons.compass_calibration),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
+                            child: IconButton(
+                              onPressed: () {
+                                addSecondOverlay(
+                                  context: context,
+                                  secondEntries: _secondEntries,
+                                  setStateCallback: setState,
+                                  width: context.screenSize.width,
+                                  height: context.screenSize.height * 0.3,
+                                  color: Colors.blueGrey.withOpacity(0.3),
+                                  initialPosition: Offset(0, context.screenSize.height * 0.7),
+                                  widget: Consumer(
+                                    builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                                      return TrainListWidget(
+                                        context: context,
+                                        ref: ref,
+                                        trainStationMap: stationState.trainStationMap,
+                                      );
+                                    },
+                                  ),
+                                  onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
+                                  fixedFlag: true,
+                                );
+                              },
+                              icon: const Icon(Icons.list),
                             ),
                           ),
                         ],
