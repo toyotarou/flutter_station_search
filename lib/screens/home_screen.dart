@@ -12,7 +12,6 @@ import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
 import '../mixin/train_list/train_list_widget.dart';
 import '../models/station_model.dart';
-import '../models/tokyo_station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
 import 'components/station_search_alert.dart';
