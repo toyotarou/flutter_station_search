@@ -48,8 +48,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
   List<LatLng> linePolylineList = <LatLng>[];
 
-  List<Polyline<Object>> selectTrainPolylineList = <Polyline<Object>>[];
-
   int searchRadius = 2;
 
   ///
@@ -141,8 +139,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       linePolylineList.clear();
     }
 
-    makeSelectTrainPolylineList();
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -194,8 +190,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                   ),
                 ],
                 if (lineStationMarkerList.isNotEmpty) ...<Widget>[MarkerLayer(markers: lineStationMarkerList)],
-                // ignore: always_specify_types
-                if (selectTrainPolylineList.isNotEmpty) ...<Widget>[PolylineLayer(polylines: selectTrainPolylineList)],
               ],
             ),
             if (spotLatitude == 0 && spotLongitude == 0) ...<Widget>[
@@ -476,32 +470,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           linePolylineList.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
         }
       }
-    }
-  }
-
-  ///
-  void makeSelectTrainPolylineList() {
-    selectTrainPolylineList.clear();
-
-    for (final String element in appParamState.trainNumberList) {
-      final List<LatLng> points = <LatLng>[];
-
-      if (appParamState.limitTokyoTrain) {
-        if (tokyoTrainState.tokyoTrainMap[element] != null) {
-          for (final TokyoStationModel element2 in tokyoTrainState.tokyoTrainMap[element]!.station) {
-            points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble()));
-          }
-        }
-      } else {
-        if (stationState.trainStationMap[element] != null) {
-          for (final StationModel element2 in stationState.trainStationMap[element]!) {
-            points.add(LatLng(element2.lat.toDouble(), element2.lng.toDouble()));
-          }
-        }
-      }
-
-      // ignore: always_specify_types
-      selectTrainPolylineList.add(Polyline(points: points, color: Colors.redAccent, strokeWidth: 6));
     }
   }
 }
