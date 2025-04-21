@@ -214,7 +214,7 @@ class _$AppParamStateImpl implements _AppParamState {
       this.currentZoom = 0,
       this.selectedLineNumber = '',
       final List<String> trainNumberList = const <String>[],
-      this.limitTokyoTrain = false})
+      this.limitTokyoTrain = true})
       : _firstEntries = firstEntries,
         _secondEntries = secondEntries,
         _trainNumberList = trainNumberList;

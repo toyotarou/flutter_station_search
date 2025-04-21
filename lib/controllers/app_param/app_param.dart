@@ -20,7 +20,7 @@ class AppParamState with _$AppParamState {
     @Default(0) double currentZoom,
     @Default('') String selectedLineNumber,
     @Default(<String>[]) List<String> trainNumberList,
-    @Default(false) bool limitTokyoTrain,
+    @Default(true) bool limitTokyoTrain,
   }) = _AppParamState;
 }
 

@@ -308,6 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                         context: context,
                                         ref: ref,
                                         trainStationMap: stationState.trainStationMap,
+                                        tokyoTrainMap: tokyoTrainState.tokyoTrainMap,
                                       );
                                     },
                                   ),
