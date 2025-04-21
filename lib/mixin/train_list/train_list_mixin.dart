@@ -34,13 +34,50 @@ mixin TrainListMixin {
       ),
     );
 
+    final List<String> trainNumberList =
+        ref.watch(appParamProvider.select((AppParamState value) => value.trainNumberList));
+
     if (limitTokyoTrain) {
       tokyoTrainMap.forEach((String key, TokyoTrainModel value) {
-        list.add(Text(key));
+        list.add(Container(
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+          child: Row(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  ref.read(appParamProvider.notifier).setTrainNumberList(trainNumber: value.trainNumber.toString());
+                },
+                child: Icon(
+                  Icons.location_on,
+                  color: (trainNumberList.contains(value.trainNumber.toString())) ? Colors.yellowAccent : Colors.white,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(key),
+            ],
+          ),
+        ));
       });
     } else {
       trainStationMap.forEach((String key, List<StationModel> value) {
-        list.add(Text(key));
+        list.add(Container(
+          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+          child: Row(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  ref.read(appParamProvider.notifier).setTrainNumberList(trainNumber: value[0].lineNumber);
+                },
+                child: Icon(
+                  Icons.location_on,
+                  color: (trainNumberList.contains(value[0].lineNumber)) ? Colors.yellowAccent : Colors.white,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(key),
+            ],
+          ),
+        ));
       });
     }
 
