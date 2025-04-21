@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/app_param/app_param.dart';
 import '../../models/station_model.dart';
-import '../../utility/utility.dart';
 
 mixin TrainListMixin {
   ///
@@ -32,44 +31,6 @@ mixin TrainListMixin {
         ],
       ),
     );
-
-    ///////////////////////////////
-
-    final List<int> stationIdList = <int>[];
-
-    final Utility utility = Utility();
-
-    final List<String> tokyoWard = utility.getTokyoWard();
-
-    trainStationMap.forEach((String key, List<StationModel> value) {
-      for (final String element2 in tokyoWard) {
-        final RegExp reg = RegExp(element2);
-
-        for (final StationModel element in value) {
-          if (reg.firstMatch(element.address) != null) {
-            stationIdList.add(element.id);
-          }
-        }
-      }
-    });
-
-    final List<String> tokyoCity = utility.getTokyoCity();
-
-    trainStationMap.forEach((String key, List<StationModel> value) {
-      for (final String element2 in tokyoCity) {
-        final RegExp reg = RegExp(element2);
-
-        for (final StationModel element in value) {
-          if (reg.firstMatch(element.address) != null) {
-            if (!stationIdList.contains(element.id)) {
-              stationIdList.add(element.id);
-            }
-          }
-        }
-      }
-    });
-
-    ///////////////////////////////
 
     trainStationMap.forEach((String key, List<StationModel> value) {
       list.add(Text(key));
