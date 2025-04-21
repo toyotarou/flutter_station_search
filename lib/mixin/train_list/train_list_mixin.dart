@@ -34,22 +34,22 @@ mixin TrainListMixin {
       ),
     );
 
-    final List<String> trainNumberList =
-        ref.watch(appParamProvider.select((AppParamState value) => value.trainNumberList));
+    final List<String> trainNameList = ref.watch(appParamProvider.select((AppParamState value) => value.trainNameList));
 
     if (limitTokyoTrain) {
       tokyoTrainMap.forEach((String key, TokyoTrainModel value) {
         list.add(Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
           child: Row(
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  ref.read(appParamProvider.notifier).setTrainNumberList(trainNumber: value.trainNumber.toString());
+                  ref.read(appParamProvider.notifier).setTrainNameList(trainNumber: value.trainName);
                 },
                 child: Icon(
                   Icons.location_on,
-                  color: (trainNumberList.contains(value.trainNumber.toString())) ? Colors.yellowAccent : Colors.white,
+                  color: (trainNameList.contains(value.trainName)) ? Colors.yellowAccent : Colors.white,
                 ),
               ),
               const SizedBox(width: 10),
@@ -61,16 +61,17 @@ mixin TrainListMixin {
     } else {
       trainStationMap.forEach((String key, List<StationModel> value) {
         list.add(Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
           child: Row(
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  ref.read(appParamProvider.notifier).setTrainNumberList(trainNumber: value[0].lineNumber);
+                  ref.read(appParamProvider.notifier).setTrainNameList(trainNumber: value[0].lineNumber);
                 },
                 child: Icon(
                   Icons.location_on,
-                  color: (trainNumberList.contains(value[0].lineNumber)) ? Colors.yellowAccent : Colors.white,
+                  color: (trainNameList.contains(value[0].lineNumber)) ? Colors.yellowAccent : Colors.white,
                 ),
               ),
               const SizedBox(width: 10),

@@ -12,6 +12,7 @@ import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
 import '../mixin/train_list/train_list_widget.dart';
 import '../models/station_model.dart';
+import '../models/tokyo_station_model.dart';
 import '../utility/tile_provider.dart';
 import '../utility/utility.dart';
 import 'components/station_search_alert.dart';
@@ -48,6 +49,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   List<LatLng> linePolylineList = <LatLng>[];
 
   int searchRadius = 2;
+
+  List<Polyline<Object>> selectTrainPolylinesList = <Polyline<Object>>[];
 
   ///
   Future<void> _getCurrentLocation() async {
@@ -138,6 +141,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       linePolylineList.clear();
     }
 
+    makeSelectTrainPolylineList();
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -189,6 +194,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                   ),
                 ],
                 if (lineStationMarkerList.isNotEmpty) ...<Widget>[MarkerLayer(markers: lineStationMarkerList)],
+                if (selectTrainPolylinesList.isNotEmpty) ...<Widget>[
+                  // ignore: always_specify_types
+                  PolylineLayer(polylines: selectTrainPolylinesList),
+                ],
               ],
             ),
             if (spotLatitude == 0 && spotLongitude == 0) ...<Widget>[
@@ -294,6 +303,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                 color: Colors.black.withOpacity(0.3), borderRadius: BorderRadius.circular(10)),
                             child: IconButton(
                               onPressed: () {
+                                appParamNotifier.clearTrainNameList();
+
                                 addSecondOverlay(
                                   context: context,
                                   secondEntries: _secondEntries,
@@ -469,6 +480,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           linePolylineList.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
         }
       }
+    }
+  }
+
+  ///
+  void makeSelectTrainPolylineList() {
+    selectTrainPolylinesList.clear();
+
+    final List<Color> twelveColor = utility.getTwelveColor();
+
+    for (int i = 0; i < appParamState.trainNameList.length; i++) {
+      final List<LatLng> points = <LatLng>[];
+
+      if (appParamState.limitTokyoTrain) {
+        if (tokyoTrainState.tokyoTrainMap[appParamState.trainNameList[i]] != null) {
+          for (final TokyoStationModel element
+              in tokyoTrainState.tokyoTrainMap[appParamState.trainNameList[i]]!.station) {
+            points.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
+          }
+        }
+      } else {
+        if (stationState.trainStationMap[appParamState.trainNameList[i]] != null) {
+          for (final StationModel element in stationState.trainStationMap[appParamState.trainNameList[i]]!) {
+            points.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
+          }
+        }
+      }
+
+      // ignore: always_specify_types
+      selectTrainPolylinesList.add(Polyline(points: points, color: twelveColor[i % 12], strokeWidth: 4));
     }
   }
 }

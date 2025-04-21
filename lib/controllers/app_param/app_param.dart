@@ -19,7 +19,7 @@ class AppParamState with _$AppParamState {
     LatLng? selectedStationLatLng,
     @Default(0) double currentZoom,
     @Default('') String selectedLineNumber,
-    @Default(<String>[]) List<String> trainNumberList,
+    @Default(<String>[]) List<String> trainNameList,
     @Default(true) bool limitTokyoTrain,
   }) = _AppParamState;
 }
@@ -56,20 +56,20 @@ class AppParam extends _$AppParam {
   void setSelectedLineNumber({required String lineNumber}) => state = state.copyWith(selectedLineNumber: lineNumber);
 
   ///
-  void setTrainNumberList({required String trainNumber}) {
-    final List<String> trainNumberList = <String>[...state.trainNumberList];
+  void setTrainNameList({required String trainNumber}) {
+    final List<String> trainNameList = <String>[...state.trainNameList];
 
-    if (trainNumberList.contains(trainNumber)) {
-      trainNumberList.remove(trainNumber);
+    if (trainNameList.contains(trainNumber)) {
+      trainNameList.remove(trainNumber);
     } else {
-      trainNumberList.add(trainNumber);
+      trainNameList.add(trainNumber);
     }
 
-    state = state.copyWith(trainNumberList: trainNumberList);
+    state = state.copyWith(trainNameList: trainNameList);
   }
 
   ///
-  void clearTrainNumberList() => state = state.copyWith(trainNumberList: <String>[]);
+  void clearTrainNameList() => state = state.copyWith(trainNameList: <String>[]);
 
   ///
   void setLimitTokyoTrain({required bool flag}) => state = state.copyWith(limitTokyoTrain: flag);

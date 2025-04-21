@@ -24,7 +24,7 @@ mixin _$AppParamState {
   LatLng? get selectedStationLatLng => throw _privateConstructorUsedError;
   double get currentZoom => throw _privateConstructorUsedError;
   String get selectedLineNumber => throw _privateConstructorUsedError;
-  List<String> get trainNumberList => throw _privateConstructorUsedError;
+  List<String> get trainNameList => throw _privateConstructorUsedError;
   bool get limitTokyoTrain => throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamState
@@ -48,7 +48,7 @@ abstract class $AppParamStateCopyWith<$Res> {
       LatLng? selectedStationLatLng,
       double currentZoom,
       String selectedLineNumber,
-      List<String> trainNumberList,
+      List<String> trainNameList,
       bool limitTokyoTrain});
 }
 
@@ -74,7 +74,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? selectedStationLatLng = freezed,
     Object? currentZoom = null,
     Object? selectedLineNumber = null,
-    Object? trainNumberList = null,
+    Object? trainNameList = null,
     Object? limitTokyoTrain = null,
   }) {
     return _then(_value.copyWith(
@@ -106,9 +106,9 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.selectedLineNumber
           : selectedLineNumber // ignore: cast_nullable_to_non_nullable
               as String,
-      trainNumberList: null == trainNumberList
-          ? _value.trainNumberList
-          : trainNumberList // ignore: cast_nullable_to_non_nullable
+      trainNameList: null == trainNameList
+          ? _value.trainNameList
+          : trainNameList // ignore: cast_nullable_to_non_nullable
               as List<String>,
       limitTokyoTrain: null == limitTokyoTrain
           ? _value.limitTokyoTrain
@@ -134,7 +134,7 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       LatLng? selectedStationLatLng,
       double currentZoom,
       String selectedLineNumber,
-      List<String> trainNumberList,
+      List<String> trainNameList,
       bool limitTokyoTrain});
 }
 
@@ -158,7 +158,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? selectedStationLatLng = freezed,
     Object? currentZoom = null,
     Object? selectedLineNumber = null,
-    Object? trainNumberList = null,
+    Object? trainNameList = null,
     Object? limitTokyoTrain = null,
   }) {
     return _then(_$AppParamStateImpl(
@@ -190,9 +190,9 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.selectedLineNumber
           : selectedLineNumber // ignore: cast_nullable_to_non_nullable
               as String,
-      trainNumberList: null == trainNumberList
-          ? _value._trainNumberList
-          : trainNumberList // ignore: cast_nullable_to_non_nullable
+      trainNameList: null == trainNameList
+          ? _value._trainNameList
+          : trainNameList // ignore: cast_nullable_to_non_nullable
               as List<String>,
       limitTokyoTrain: null == limitTokyoTrain
           ? _value.limitTokyoTrain
@@ -213,11 +213,11 @@ class _$AppParamStateImpl implements _AppParamState {
       this.selectedStationLatLng,
       this.currentZoom = 0,
       this.selectedLineNumber = '',
-      final List<String> trainNumberList = const <String>[],
+      final List<String> trainNameList = const <String>[],
       this.limitTokyoTrain = true})
       : _firstEntries = firstEntries,
         _secondEntries = secondEntries,
-        _trainNumberList = trainNumberList;
+        _trainNameList = trainNameList;
 
   final List<OverlayEntry>? _firstEntries;
   @override
@@ -251,13 +251,13 @@ class _$AppParamStateImpl implements _AppParamState {
   @override
   @JsonKey()
   final String selectedLineNumber;
-  final List<String> _trainNumberList;
+  final List<String> _trainNameList;
   @override
   @JsonKey()
-  List<String> get trainNumberList {
-    if (_trainNumberList is EqualUnmodifiableListView) return _trainNumberList;
+  List<String> get trainNameList {
+    if (_trainNameList is EqualUnmodifiableListView) return _trainNameList;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_trainNumberList);
+    return EqualUnmodifiableListView(_trainNameList);
   }
 
   @override
@@ -266,7 +266,7 @@ class _$AppParamStateImpl implements _AppParamState {
 
   @override
   String toString() {
-    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng, currentZoom: $currentZoom, selectedLineNumber: $selectedLineNumber, trainNumberList: $trainNumberList, limitTokyoTrain: $limitTokyoTrain)';
+    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng, currentZoom: $currentZoom, selectedLineNumber: $selectedLineNumber, trainNameList: $trainNameList, limitTokyoTrain: $limitTokyoTrain)';
   }
 
   @override
@@ -289,7 +289,7 @@ class _$AppParamStateImpl implements _AppParamState {
             (identical(other.selectedLineNumber, selectedLineNumber) ||
                 other.selectedLineNumber == selectedLineNumber) &&
             const DeepCollectionEquality()
-                .equals(other._trainNumberList, _trainNumberList) &&
+                .equals(other._trainNameList, _trainNameList) &&
             (identical(other.limitTokyoTrain, limitTokyoTrain) ||
                 other.limitTokyoTrain == limitTokyoTrain));
   }
@@ -304,7 +304,7 @@ class _$AppParamStateImpl implements _AppParamState {
       selectedStationLatLng,
       currentZoom,
       selectedLineNumber,
-      const DeepCollectionEquality().hash(_trainNumberList),
+      const DeepCollectionEquality().hash(_trainNameList),
       limitTokyoTrain);
 
   /// Create a copy of AppParamState
@@ -325,7 +325,7 @@ abstract class _AppParamState implements AppParamState {
       final LatLng? selectedStationLatLng,
       final double currentZoom,
       final String selectedLineNumber,
-      final List<String> trainNumberList,
+      final List<String> trainNameList,
       final bool limitTokyoTrain}) = _$AppParamStateImpl;
 
   @override
@@ -343,7 +343,7 @@ abstract class _AppParamState implements AppParamState {
   @override
   String get selectedLineNumber;
   @override
-  List<String> get trainNumberList;
+  List<String> get trainNameList;
   @override
   bool get limitTokyoTrain;
 
