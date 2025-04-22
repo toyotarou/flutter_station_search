@@ -52,6 +52,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
   List<Polyline<Object>> selectTrainPolylinesList = <Polyline<Object>>[];
 
+  List<Marker> selectTrainStationMarkerList = <Marker>[];
+
   ///
   Future<void> _getCurrentLocation() async {
     try {
@@ -197,6 +199,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                 if (selectTrainPolylinesList.isNotEmpty) ...<Widget>[
                   // ignore: always_specify_types
                   PolylineLayer(polylines: selectTrainPolylinesList),
+
+                  MarkerLayer(markers: selectTrainStationMarkerList),
                 ],
               ],
             ),
@@ -487,7 +491,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   void makeSelectTrainPolylineList() {
     selectTrainPolylinesList.clear();
 
-    final List<Color> twelveColor = utility.getTwelveColor();
+    final List<LatLng> markerPoints = <LatLng>[];
 
     for (int i = 0; i < appParamState.trainNameList.length; i++) {
       final List<LatLng> points = <LatLng>[];
@@ -497,18 +501,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           for (final TokyoStationModel element
               in tokyoTrainState.tokyoTrainMap[appParamState.trainNameList[i]]!.station) {
             points.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
+
+            markerPoints.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
           }
         }
       } else {
         if (stationState.trainStationMap[appParamState.trainNameList[i]] != null) {
           for (final StationModel element in stationState.trainStationMap[appParamState.trainNameList[i]]!) {
             points.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
+
+            markerPoints.add(LatLng(element.lat.toDouble(), element.lng.toDouble()));
           }
         }
       }
 
       // ignore: always_specify_types
-      selectTrainPolylinesList.add(Polyline(points: points, color: twelveColor[i % 12], strokeWidth: 4));
+      selectTrainPolylinesList.add(Polyline(points: points, color: Colors.redAccent, strokeWidth: 4));
+    }
+
+    if (markerPoints.isNotEmpty) {
+      makeSelectTrainStationMarkerList(markerPoints: markerPoints);
+    }
+  }
+
+  ///
+  void makeSelectTrainStationMarkerList({required List<LatLng> markerPoints}) {
+    selectTrainStationMarkerList.clear();
+
+    for (final LatLng element in markerPoints) {
+      selectTrainStationMarkerList
+          .add(Marker(point: element, child: const Icon(Icons.location_on, color: Colors.redAccent)));
     }
   }
 }
