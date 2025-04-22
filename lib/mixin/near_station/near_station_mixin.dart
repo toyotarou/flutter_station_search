@@ -3,12 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../controllers/app_param/app_param.dart';
+import '../../controllers/bus_info/bus_info.dart';
 import '../../extensions/extensions.dart';
 import '../../models/station_extends_model.dart';
 import '../../models/station_model.dart';
-import '../../utility/utility.dart';
+import '../../screens/components/bus_info_list_display_alert.dart';
 
-mixin NearStationMixin {
+import '../../screens/parts/station_search_overlay.dart';
+import '../../utility/utility.dart';
+import 'near_station_widget.dart';
+
+mixin NearStationMixin on ConsumerState<NearStationWidget> {
+  final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
+
   ///
   Widget nearStationDisplayParts(
       {required WidgetRef ref,
@@ -39,6 +46,7 @@ mixin NearStationMixin {
             height: height - 140,
             child: displayNearStationList(
               ref: ref,
+              context: context,
               spotLatitude: spotLatitude,
               spotLongitude: spotLongitude,
               stationModelList: stationModelList,
@@ -53,6 +61,7 @@ mixin NearStationMixin {
   ///
   Widget displayNearStationList(
       {required WidgetRef ref,
+      required BuildContext context,
       required List<StationModel> stationModelList,
       required double spotLatitude,
       required double spotLongitude,
@@ -80,6 +89,11 @@ mixin NearStationMixin {
 
     final String selectedLineNumber =
         ref.watch(appParamProvider.select((AppParamState value) => value.selectedLineNumber));
+
+    final Map<String, List<String>> busInfoMap =
+        ref.watch(busInfoProvider.select((BusInfoState value) => value.busInfoMap));
+
+    final AppParam appParamNotifier = ref.read(appParamProvider.notifier);
 
     final List<int> keepStation = <int>[];
 
@@ -116,6 +130,25 @@ mixin NearStationMixin {
                             onTap: () {
                               ref.read(appParamProvider.notifier).setSelectedStationLatLng(
                                   latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
+
+                              if (busInfoMap[element.stationName] != null) {
+                                addSecondOverlay(
+                                  context: context,
+                                  secondEntries: _secondEntries,
+                                  setStateCallback: setState,
+                                  width: context.screenSize.width * 0.5,
+                                  height: context.screenSize.height * 0.3,
+                                  color: Colors.blueGrey.withOpacity(0.3),
+                                  initialPosition:
+                                      Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.6),
+                                  onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
+                                  widget: BusInfoListDisplayAlert(
+                                    busInfo: busInfoMap[element.stationName]!,
+                                    setDefaultBoundsMap: setDefaultBoundsMap,
+                                    height: context.screenSize.height * 0.3,
+                                  ),
+                                );
+                              }
 
                               setDefaultBoundsMap();
                             },

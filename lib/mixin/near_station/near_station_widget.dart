@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/station_model.dart';
 import 'near_station_mixin.dart';
 
-class NearStationWidget extends ConsumerWidget with NearStationMixin {
+class NearStationWidget extends ConsumerStatefulWidget {
   const NearStationWidget(
       {super.key,
       required this.height,
@@ -25,18 +25,23 @@ class NearStationWidget extends ConsumerWidget with NearStationMixin {
   final List<StationModel> stationModelList;
   final VoidCallback setDefaultBoundsMap;
 
+  @override
+  ConsumerState<NearStationWidget> createState() => _NearStationWidgetState();
+}
+
+class _NearStationWidgetState extends ConsumerState<NearStationWidget> with NearStationMixin {
   ///
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return nearStationDisplayParts(
       ref: ref,
       context: context,
       from: 'NearStation',
-      height: height,
-      spotLatitude: spotLatitude,
-      spotLongitude: spotLongitude,
-      stationModelList: stationModelList,
-      setDefaultBoundsMap: setDefaultBoundsMap,
+      height: widget.height,
+      spotLatitude: widget.spotLatitude,
+      spotLongitude: widget.spotLongitude,
+      stationModelList: widget.stationModelList,
+      setDefaultBoundsMap: widget.setDefaultBoundsMap,
     );
   }
 }
