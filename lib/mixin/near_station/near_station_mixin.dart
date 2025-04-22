@@ -128,10 +128,14 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
+                              closeSecondOverlays(ref: ref);
+
                               ref.read(appParamProvider.notifier).setSelectedStationLatLng(
                                   latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
 
                               if (busInfoMap[element.stationName] != null) {
+                                appParamNotifier.setSecondOverlayParams(secondEntries: _secondEntries);
+
                                 addSecondOverlay(
                                   context: context,
                                   secondEntries: _secondEntries,

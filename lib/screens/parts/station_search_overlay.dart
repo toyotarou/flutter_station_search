@@ -209,6 +209,13 @@ void addSecondOverlay({
 
 ///
 void closeAllOverlays({required WidgetRef ref}) {
+  closeFirstOverlays(ref: ref);
+
+  closeSecondOverlays(ref: ref);
+}
+
+///
+void closeFirstOverlays({required WidgetRef ref}) {
   final List<OverlayEntry>? firstEntries =
       ref.watch(appParamProvider.select((AppParamState value) => value.firstEntries));
 
@@ -217,7 +224,10 @@ void closeAllOverlays({required WidgetRef ref}) {
       e.remove();
     }
   }
+}
 
+///
+void closeSecondOverlays({required WidgetRef ref}) {
   final List<OverlayEntry>? secondEntries =
       ref.watch(appParamProvider.select((AppParamState value) => value.secondEntries));
 
