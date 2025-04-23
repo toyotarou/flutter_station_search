@@ -25,7 +25,8 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
       required List<StationModel> stationModelList,
       required double spotLatitude,
       required double spotLongitude,
-      required VoidCallback setDefaultBoundsMap}) {
+      required VoidCallback setDefaultBoundsMap,
+      required Map<String, List<StationModel>> stationStationModelListMap}) {
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 12),
       child: Column(
@@ -51,6 +52,7 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
               spotLongitude: spotLongitude,
               stationModelList: stationModelList,
               setDefaultBoundsMap: setDefaultBoundsMap,
+              stationStationModelListMap: stationStationModelListMap,
             ),
           ),
         ],
@@ -65,7 +67,8 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
       required List<StationModel> stationModelList,
       required double spotLatitude,
       required double spotLongitude,
-      required VoidCallback setDefaultBoundsMap}) {
+      required VoidCallback setDefaultBoundsMap,
+      required Map<String, List<StationModel>> stationStationModelListMap}) {
     final Utility utility = Utility();
 
     final List<Widget> list = <Widget>[];
@@ -146,6 +149,8 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                                 widget: BusInfoListDisplayAlert(
                                   busInfo: busInfoMap[element.stationName] ?? <String>[],
                                   height: context.screenSize.height * 0.3,
+                                  stationStationModelListMap: stationStationModelListMap,
+                                  selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
                                 ),
                               );
 

@@ -17,6 +17,7 @@ class StationState with _$StationState {
     @Default(<StationModel>[]) List<StationModel> stationList,
     @Default(<String, StationModel>{}) Map<String, StationModel> stationMap,
     @Default(<String, List<StationModel>>{}) Map<String, List<StationModel>> trainStationMap,
+    @Default(<String, List<StationModel>>{}) Map<String, List<StationModel>> stationStationModelListMap,
   }) = _StationState;
 }
 
@@ -40,12 +41,16 @@ class Station extends _$Station {
 
       final Map<String, List<StationModel>> map2 = <String, List<StationModel>>{};
 
+      final Map<String, List<StationModel>> map3 = <String, List<StationModel>>{};
+
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
         // ignore: avoid_dynamic_calls
         final StationModel val = StationModel.fromJson(value['data'][i] as Map<String, dynamic>);
 
         map2[val.lineName] = <StationModel>[];
+
+        map3[val.stationName] = <StationModel>[];
       }
 
       // ignore: avoid_dynamic_calls
@@ -58,9 +63,16 @@ class Station extends _$Station {
         map['${val.lat}|${val.lng}'] = val;
 
         map2[val.lineName]?.add(val);
+
+        map3[val.stationName]?.add(val);
       }
 
-      return state.copyWith(stationList: list, stationMap: map, trainStationMap: map2);
+      return state.copyWith(
+        stationList: list,
+        stationMap: map,
+        trainStationMap: map2,
+        stationStationModelListMap: map3,
+      );
     } catch (e) {
       utility.showError('予期せぬエラーが発生しました');
       rethrow; // これにより呼び出し元でキャッチできる
