@@ -128,31 +128,26 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              closeSecondOverlays(ref: ref);
-
                               ref.read(appParamProvider.notifier).setSelectedStationLatLng(
                                   latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
 
-                              if (busInfoMap[element.stationName] != null) {
-                                appParamNotifier.setSecondOverlayParams(secondEntries: _secondEntries);
+                              appParamNotifier.setSecondOverlayParams(secondEntries: _secondEntries);
 
-                                addSecondOverlay(
-                                  context: context,
-                                  secondEntries: _secondEntries,
-                                  setStateCallback: setState,
-                                  width: context.screenSize.width * 0.5,
+                              addSecondOverlay(
+                                context: context,
+                                secondEntries: _secondEntries,
+                                setStateCallback: setState,
+                                width: context.screenSize.width * 0.5,
+                                height: context.screenSize.height * 0.3,
+                                color: Colors.blueGrey.withOpacity(0.3),
+                                initialPosition:
+                                    Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.6),
+                                onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
+                                widget: BusInfoListDisplayAlert(
+                                  busInfo: busInfoMap[element.stationName] ?? <String>[],
                                   height: context.screenSize.height * 0.3,
-                                  color: Colors.blueGrey.withOpacity(0.3),
-                                  initialPosition:
-                                      Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.6),
-                                  onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
-                                  widget: BusInfoListDisplayAlert(
-                                    busInfo: busInfoMap[element.stationName]!,
-                                    setDefaultBoundsMap: setDefaultBoundsMap,
-                                    height: context.screenSize.height * 0.3,
-                                  ),
-                                );
-                              }
+                                ),
+                              );
 
                               setDefaultBoundsMap();
                             },
@@ -171,6 +166,14 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           const SizedBox.shrink(),
+                          Text(element.lineName),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          const SizedBox.shrink(),
                           Container(
                             alignment: Alignment.topRight,
                             child: Text(
@@ -185,12 +188,18 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 5),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Expanded(child: Container(alignment: Alignment.topRight, child: Text(element.lineName))),
-                          const SizedBox(width: 10),
+                          const SizedBox.shrink(),
                           Row(
                             children: <Widget>[
+                              Icon(
+                                Icons.directions_bus,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                              const SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {
                                   ref

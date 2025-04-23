@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 class BusInfoListDisplayAlert extends StatefulWidget {
-  const BusInfoListDisplayAlert(
-      {super.key, required this.busInfo, required this.setDefaultBoundsMap, required this.height});
+  const BusInfoListDisplayAlert({super.key, required this.busInfo, required this.height});
 
   final List<String> busInfo;
-  final VoidCallback setDefaultBoundsMap;
 
   final double height;
 
@@ -23,7 +21,13 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
   Widget displayBusInfoList() {
     final List<Widget> list = <Widget>[];
 
-    for (final String element in widget.busInfo) {
+    List<String> roopData = widget.busInfo;
+
+    if (widget.busInfo.isEmpty) {
+      roopData = <String>['no bus data'];
+    }
+
+    for (final String element in roopData) {
       list.add(
         DefaultTextStyle(
           style: const TextStyle(fontSize: 12),
@@ -34,13 +38,7 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
               border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
               color: Colors.black.withOpacity(0.3),
             ),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.location_on, color: Colors.white.withOpacity(0.5)),
-                const SizedBox(width: 10),
-                Text(element),
-              ],
-            ),
+            child: Row(children: <Widget>[Text(element)]),
           ),
         ),
       );
