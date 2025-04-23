@@ -14,8 +14,7 @@ class NearStationWidget extends ConsumerStatefulWidget {
       required this.stationModelList,
       required this.spotLatitude,
       required this.spotLongitude,
-      required this.setDefaultBoundsMap,
-      required this.stationStationModelListMap});
+      required this.setDefaultBoundsMap});
 
   final BuildContext context;
   final WidgetRef ref;
@@ -25,7 +24,6 @@ class NearStationWidget extends ConsumerStatefulWidget {
   final double spotLongitude;
   final List<StationModel> stationModelList;
   final VoidCallback setDefaultBoundsMap;
-  final Map<String, List<StationModel>> stationStationModelListMap;
 
   @override
   ConsumerState<NearStationWidget> createState() => _NearStationWidgetState();
@@ -44,7 +42,6 @@ class _NearStationWidgetState extends ConsumerState<NearStationWidget> with Near
       spotLongitude: widget.spotLongitude,
       stationModelList: widget.stationModelList,
       setDefaultBoundsMap: widget.setDefaultBoundsMap,
-      stationStationModelListMap: widget.stationStationModelListMap,
     );
   }
 }

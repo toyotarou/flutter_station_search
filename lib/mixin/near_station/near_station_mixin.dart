@@ -17,16 +17,16 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
   final List<OverlayEntry> _secondEntries = <OverlayEntry>[];
 
   ///
-  Widget nearStationDisplayParts(
-      {required WidgetRef ref,
-      required BuildContext context,
-      required String from,
-      required double height,
-      required List<StationModel> stationModelList,
-      required double spotLatitude,
-      required double spotLongitude,
-      required VoidCallback setDefaultBoundsMap,
-      required Map<String, List<StationModel>> stationStationModelListMap}) {
+  Widget nearStationDisplayParts({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String from,
+    required double height,
+    required List<StationModel> stationModelList,
+    required double spotLatitude,
+    required double spotLongitude,
+    required VoidCallback setDefaultBoundsMap,
+  }) {
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 12),
       child: Column(
@@ -52,7 +52,6 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
               spotLongitude: spotLongitude,
               stationModelList: stationModelList,
               setDefaultBoundsMap: setDefaultBoundsMap,
-              stationStationModelListMap: stationStationModelListMap,
             ),
           ),
         ],
@@ -61,14 +60,14 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
   }
 
   ///
-  Widget displayNearStationList(
-      {required WidgetRef ref,
-      required BuildContext context,
-      required List<StationModel> stationModelList,
-      required double spotLatitude,
-      required double spotLongitude,
-      required VoidCallback setDefaultBoundsMap,
-      required Map<String, List<StationModel>> stationStationModelListMap}) {
+  Widget displayNearStationList({
+    required WidgetRef ref,
+    required BuildContext context,
+    required List<StationModel> stationModelList,
+    required double spotLatitude,
+    required double spotLongitude,
+    required VoidCallback setDefaultBoundsMap,
+  }) {
     final Utility utility = Utility();
 
     final List<Widget> list = <Widget>[];
@@ -149,7 +148,6 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                                 widget: BusInfoListDisplayAlert(
                                   busInfo: busInfoMap[element.stationName] ?? <String>[],
                                   height: context.screenSize.height * 0.3,
-                                  stationStationModelListMap: stationStationModelListMap,
                                   selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
                                 ),
                               );

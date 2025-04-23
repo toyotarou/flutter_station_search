@@ -2,21 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../extensions/extensions.dart';
-import '../../models/station_model.dart';
-import '../../utility/utility.dart';
 
 class BusInfoListDisplayAlert extends StatefulWidget {
-  const BusInfoListDisplayAlert(
-      {super.key,
-      required this.busInfo,
-      required this.height,
-      required this.selectedStationLatLng,
-      required this.stationStationModelListMap});
+  const BusInfoListDisplayAlert({
+    super.key,
+    required this.busInfo,
+    required this.height,
+    required this.selectedStationLatLng,
+  });
 
   final List<String> busInfo;
   final double height;
   final LatLng selectedStationLatLng;
-  final Map<String, List<StationModel>> stationStationModelListMap;
 
   @override
   State<BusInfoListDisplayAlert> createState() => _BusInfoListDisplayAlertState();
@@ -30,7 +27,6 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
 
   ///
   Widget displayBusInfoList() {
-    final Utility utility = Utility();
 
     final List<Widget> list = <Widget>[];
 
@@ -41,16 +37,16 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
     }
 
     for (final String element in roopData) {
-      String distance = '';
+      const String distance = '';
 
-      if (widget.stationStationModelListMap[element] != null) {
-        distance = utility.calcDistance(
-          originLat: widget.selectedStationLatLng.latitude,
-          originLng: widget.selectedStationLatLng.longitude,
-          destLat: widget.stationStationModelListMap[element]![0].lat.toDouble(),
-          destLng: widget.stationStationModelListMap[element]![0].lng.toDouble(),
-        );
-      }
+      // if (widget.stationStationModelListMap[element] != null) {
+      //   distance = utility.calcDistance(
+      //     originLat: widget.selectedStationLatLng.latitude,
+      //     originLng: widget.selectedStationLatLng.longitude,
+      //     destLat: widget.stationStationModelListMap[element]![0].lat.toDouble(),
+      //     destLng: widget.stationStationModelListMap[element]![0].lng.toDouble(),
+      //   );
+      // }
 
       list.add(
         DefaultTextStyle(

@@ -282,7 +282,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                         spotLongitude: spotLongitude,
                                         stationModelList: stationModelList,
                                         setDefaultBoundsMap: setDefaultBoundsMap,
-                                        stationStationModelListMap: stationState.stationStationModelListMap,
                                       );
                                     },
                                   ),

@@ -19,9 +19,9 @@ class TokyoTrainState with _$TokyoTrainState {
     @Default(<String, TokyoTrainModel>{}) Map<String, TokyoTrainModel> tokyoTrainMap,
     @Default(<int, TokyoTrainModel>{}) Map<int, TokyoTrainModel> tokyoTrainIdMap,
     @Default(<String, TokyoStationModel>{}) Map<String, TokyoStationModel> tokyoStationMap,
-
-    //
     @Default(<int>[]) List<int> selectTrainList,
+    @Default(<String, List<TokyoStationModel>>{})
+    Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
   }) = _TokyoTrainState;
 }
 
@@ -50,12 +50,12 @@ class TokyoTrain extends _$TokyoTrain {
 
       final Map<String, TokyoStationModel> map3 = <String, TokyoStationModel>{};
 
+      final Map<String, List<TokyoStationModel>> map4 = <String, List<TokyoStationModel>>{};
+
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
-        final TokyoTrainModel val = TokyoTrainModel.fromJson(
-          // ignore: avoid_dynamic_calls
-          value['data'][i] as Map<String, dynamic>,
-        );
+        // ignore: avoid_dynamic_calls
+        final TokyoTrainModel val = TokyoTrainModel.fromJson(value['data'][i] as Map<String, dynamic>);
 
         list.add(val);
         map[val.trainName] = val;
@@ -64,10 +64,28 @@ class TokyoTrain extends _$TokyoTrain {
 
         for (final TokyoStationModel element in val.station) {
           map3[element.id] = element;
+
+          map4[element.stationName] = <TokyoStationModel>[];
         }
       }
 
-      return state.copyWith(tokyoTrainList: list, tokyoTrainMap: map, tokyoStationMap: map3, tokyoTrainIdMap: map2);
+      // ignore: avoid_dynamic_calls
+      for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
+        // ignore: avoid_dynamic_calls
+        final TokyoTrainModel val = TokyoTrainModel.fromJson(value['data'][i] as Map<String, dynamic>);
+
+        for (final TokyoStationModel element in val.station) {
+          map4[element.stationName]?.add(element);
+        }
+      }
+
+      return state.copyWith(
+        tokyoTrainList: list,
+        tokyoTrainMap: map,
+        tokyoStationMap: map3,
+        tokyoTrainIdMap: map2,
+        tokyoStationTokyoStationModelListMap: map4,
+      );
     } catch (e) {
       utility.showError('予期せぬエラーが発生しました');
       rethrow; // これにより呼び出し元でキャッチできる
