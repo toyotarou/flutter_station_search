@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
+import '../../models/tokyo_station_model.dart';
+import '../../utility/utility.dart';
 
-class BusInfoListDisplayAlert extends StatefulWidget {
+class BusInfoListDisplayAlert extends ConsumerStatefulWidget {
   const BusInfoListDisplayAlert({
     super.key,
     required this.busInfo,
@@ -16,10 +20,12 @@ class BusInfoListDisplayAlert extends StatefulWidget {
   final LatLng selectedStationLatLng;
 
   @override
-  State<BusInfoListDisplayAlert> createState() => _BusInfoListDisplayAlertState();
+  ConsumerState<BusInfoListDisplayAlert> createState() => _BusInfoListDisplayAlertState();
 }
 
-class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
+class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAlert> {
+  Utility utility = Utility();
+
   ///
   @override
   Widget build(BuildContext context) =>
@@ -27,6 +33,8 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
 
   ///
   Widget displayBusInfoList() {
+    final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationTokyoStationModelListMap));
 
     final List<Widget> list = <Widget>[];
 
@@ -37,37 +45,37 @@ class _BusInfoListDisplayAlertState extends State<BusInfoListDisplayAlert> {
     }
 
     for (final String element in roopData) {
-      const String distance = '';
+      if (tokyoStationTokyoStationModelListMap[element] != null) {
+        var distance = utility.calcDistance(
+          originLat: widget.selectedStationLatLng.latitude,
+          originLng: widget.selectedStationLatLng.longitude,
+          destLat: tokyoStationTokyoStationModelListMap[element]![0].lat.toDouble(),
+          destLng: tokyoStationTokyoStationModelListMap[element]![0].lng.toDouble(),
+        );
 
-      // if (widget.stationStationModelListMap[element] != null) {
-      //   distance = utility.calcDistance(
-      //     originLat: widget.selectedStationLatLng.latitude,
-      //     originLng: widget.selectedStationLatLng.longitude,
-      //     destLat: widget.stationStationModelListMap[element]![0].lat.toDouble(),
-      //     destLng: widget.stationStationModelListMap[element]![0].lng.toDouble(),
-      //   );
-      // }
-
-      list.add(
-        DefaultTextStyle(
-          style: const TextStyle(fontSize: 12),
-          child: Container(
-            padding: const EdgeInsets.all(5),
-            margin: const EdgeInsets.symmetric(vertical: 1),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
-              color: Colors.black.withOpacity(0.3),
+        if (distance != '') {
+          list.add(
+            DefaultTextStyle(
+              style: const TextStyle(fontSize: 12),
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                margin: const EdgeInsets.symmetric(vertical: 1),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
+                  color: Colors.black.withOpacity(0.3),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(element),
+                    Text(distance.toDouble().toStringAsFixed(2)),
+                  ],
+                ),
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(element),
-                Text((distance == '') ? '' : distance.toDouble().toStringAsFixed(2)),
-              ],
-            ),
-          ),
-        ),
-      );
+          );
+        }
+      }
     }
 
     return SingleChildScrollView(child: Column(children: list));
