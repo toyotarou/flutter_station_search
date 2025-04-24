@@ -143,21 +143,6 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
 
                               appParamNotifier.setSecondOverlayParams(secondEntries: _secondEntries);
 
-                              print(tokyoStationNextStationMap[element.stationName]);
-
-
-
-                              /*
-
-                              I/flutter ( 5252): [{prev: 上井草, next: 武蔵関}]
-I/flutter ( 5252): [{prev: 西荻窪, next: 三鷹}, {prev: 三鷹, next: 西荻窪}, {prev: 井の頭公園, next: }]
-
-
-
-                              */
-
-
-
                               addSecondOverlay(
                                 context: context,
                                 secondEntries: _secondEntries,
@@ -173,7 +158,8 @@ I/flutter ( 5252): [{prev: 西荻窪, next: 三鷹}, {prev: 三鷹, next: 西荻
                                   height: context.screenSize.height * 0.3,
                                   selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
                                   tokyoStationTokyoStationModelListMap: tokyoStationTokyoStationModelListMap,
-                                  nextStationMap: tokyoStationNextStationMap[element.stationName] ?? <Map<String, String>>[],
+                                  nextStationMap:
+                                      tokyoStationNextStationMap[element.stationName] ?? <Map<String, String>>[],
                                 ),
                               );
 
@@ -255,12 +241,6 @@ I/flutter ( 5252): [{prev: 西荻窪, next: 三鷹}, {prev: 三鷹, next: 西荻
                                       }
                                     }
                                   }
-
-                                  print(busStationList);
-
-                                  print(element.stationName);
-
-                                  print(tokyoStationNextStationMap[element.stationName]);
                                 },
                                 child: Icon(
                                   Icons.directions_bus,
