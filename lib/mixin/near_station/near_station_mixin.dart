@@ -4,9 +4,11 @@ import 'package:latlong2/latlong.dart';
 
 import '../../controllers/app_param/app_param.dart';
 import '../../controllers/bus_info/bus_info.dart';
+import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/station_extends_model.dart';
 import '../../models/station_model.dart';
+import '../../models/tokyo_station_model.dart';
 import '../../screens/components/bus_info_list_display_alert.dart';
 
 import '../../screens/parts/station_search_overlay.dart';
@@ -97,12 +99,31 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
 
     final AppParam appParamNotifier = ref.read(appParamProvider.notifier);
 
+    final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationTokyoStationModelListMap));
+
+    final List<StationExtendsModel> busStationList = <StationExtendsModel>[];
+
     final List<int> keepStation = <int>[];
 
     list2
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance))
       ..forEach((StationExtendsModel element) {
         if (!keepStation.contains(element.id)) {
+          //////////////////////////////////////////////////////
+          final bool busPolylineDisplay =
+
+              // 1. 駅が選択されている
+              (selectedStationLatLng != null) &&
+
+                  // 2. 緯度経度が合致する
+                  ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
+                      (selectedStationLatLng.longitude == element.lng.toDouble())) &&
+
+                  //3. バス駅リストが空ではない
+                  busStationList.isNotEmpty;
+          //////////////////////////////////////////////////////
+
           list.add(
             Stack(
               children: <Widget>[
@@ -130,6 +151,34 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
+                              if (busInfoMap[element.stationName] != null) {
+                                for (final String element2 in busInfoMap[element.stationName]!) {
+                                  if (tokyoStationTokyoStationModelListMap[element2] != null) {
+                                    final String distance = utility.calcDistance(
+                                      originLat: element.lat.toDouble(),
+                                      originLng: element.lng.toDouble(),
+                                      destLat: tokyoStationTokyoStationModelListMap[element2]![0].lat.toDouble(),
+                                      destLng: tokyoStationTokyoStationModelListMap[element2]![0].lng.toDouble(),
+                                    );
+
+                                    if (distance != '') {
+                                      busStationList.add(
+                                        StationExtendsModel(
+                                          id: 0,
+                                          stationName: tokyoStationTokyoStationModelListMap[element2]![0].stationName,
+                                          address: tokyoStationTokyoStationModelListMap[element2]![0].address,
+                                          lat: tokyoStationTokyoStationModelListMap[element2]![0].lat,
+                                          lng: tokyoStationTokyoStationModelListMap[element2]![0].lng,
+                                          lineNumber: '',
+                                          lineName: '',
+                                          distance: distance.toDouble(),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                }
+                              }
+
                               ref.read(appParamProvider.notifier).setSelectedStationLatLng(
                                   latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
 
@@ -146,10 +195,10 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                                     Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.6),
                                 onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
                                 widget: BusInfoListDisplayAlert(
-                                  busInfo: busInfoMap[element.stationName] ?? <String>[],
-                                  height: context.screenSize.height * 0.3,
-                                  selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
-                                ),
+                                    busInfo: busInfoMap[element.stationName] ?? <String>[],
+                                    height: context.screenSize.height * 0.3,
+                                    selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
+                                    tokyoStationTokyoStationModelListMap: tokyoStationTokyoStationModelListMap),
                               );
 
                               setDefaultBoundsMap();
@@ -198,9 +247,16 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                           const SizedBox.shrink(),
                           Row(
                             children: <Widget>[
-                              Icon(
-                                Icons.directions_bus,
-                                color: Colors.white.withOpacity(0.5),
+                              GestureDetector(
+                                onTap: busPolylineDisplay
+                                    ? () {
+                                        print(busStationList);
+                                      }
+                                    : null,
+                                child: Icon(Icons.directions_bus,
+                                    color: busPolylineDisplay
+                                        ? Colors.yellowAccent.withOpacity(0.5)
+                                        : Colors.white.withOpacity(0.5)),
                               ),
                               const SizedBox(width: 10),
                               GestureDetector(

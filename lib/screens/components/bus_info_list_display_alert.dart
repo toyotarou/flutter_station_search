@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../controllers/tokyo_train/tokyo_train.dart';
 import '../../extensions/extensions.dart';
 import '../../models/station_extends_model.dart';
 import '../../models/tokyo_station_model.dart';
@@ -14,11 +13,13 @@ class BusInfoListDisplayAlert extends ConsumerStatefulWidget {
     required this.busInfo,
     required this.height,
     required this.selectedStationLatLng,
+    required this.tokyoStationTokyoStationModelListMap,
   });
 
   final List<String> busInfo;
   final double height;
   final LatLng selectedStationLatLng;
+  final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap;
 
   @override
   ConsumerState<BusInfoListDisplayAlert> createState() => _BusInfoListDisplayAlertState();
@@ -34,9 +35,6 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
 
   ///
   Widget displayBusInfoList() {
-    final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
-        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationTokyoStationModelListMap));
-
     final List<Widget> list = <Widget>[];
 
     List<String> roopData = widget.busInfo;
@@ -48,22 +46,22 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
     final List<StationExtendsModel> busStationList = <StationExtendsModel>[];
 
     for (final String element in roopData) {
-      if (tokyoStationTokyoStationModelListMap[element] != null) {
+      if (widget.tokyoStationTokyoStationModelListMap[element] != null) {
         final String distance = utility.calcDistance(
           originLat: widget.selectedStationLatLng.latitude,
           originLng: widget.selectedStationLatLng.longitude,
-          destLat: tokyoStationTokyoStationModelListMap[element]![0].lat.toDouble(),
-          destLng: tokyoStationTokyoStationModelListMap[element]![0].lng.toDouble(),
+          destLat: widget.tokyoStationTokyoStationModelListMap[element]![0].lat.toDouble(),
+          destLng: widget.tokyoStationTokyoStationModelListMap[element]![0].lng.toDouble(),
         );
 
         if (distance != '') {
           busStationList.add(
             StationExtendsModel(
               id: 0,
-              stationName: tokyoStationTokyoStationModelListMap[element]![0].stationName,
-              address: tokyoStationTokyoStationModelListMap[element]![0].address,
-              lat: tokyoStationTokyoStationModelListMap[element]![0].lat,
-              lng: tokyoStationTokyoStationModelListMap[element]![0].lng,
+              stationName: widget.tokyoStationTokyoStationModelListMap[element]![0].stationName,
+              address: widget.tokyoStationTokyoStationModelListMap[element]![0].address,
+              lat: widget.tokyoStationTokyoStationModelListMap[element]![0].lat,
+              lng: widget.tokyoStationTokyoStationModelListMap[element]![0].lng,
               lineNumber: '',
               lineName: '',
               distance: distance.toDouble(),
@@ -71,6 +69,10 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
           );
         }
       }
+    }
+
+    if (busStationList.isEmpty) {
+      return const Text('no bus data');
     }
 
     busStationList
