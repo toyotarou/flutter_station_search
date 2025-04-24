@@ -102,7 +102,8 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
     final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
         ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationTokyoStationModelListMap));
 
-    final List<StationExtendsModel> busStationList = <StationExtendsModel>[];
+    final Map<String, List<Map<String, String>>> tokyoStationNextStationMap =
+        ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationNextStationMap));
 
     final List<int> keepStation = <int>[];
 
@@ -110,20 +111,6 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance))
       ..forEach((StationExtendsModel element) {
         if (!keepStation.contains(element.id)) {
-          //////////////////////////////////////////////////////
-          final bool busPolylineDisplay =
-
-              // 1. 駅が選択されている
-              (selectedStationLatLng != null) &&
-
-                  // 2. 緯度経度が合致する
-                  ((selectedStationLatLng.latitude == element.lat.toDouble()) &&
-                      (selectedStationLatLng.longitude == element.lng.toDouble())) &&
-
-                  //3. バス駅リストが空ではない
-                  busStationList.isNotEmpty;
-          //////////////////////////////////////////////////////
-
           list.add(
             Stack(
               children: <Widget>[
@@ -151,38 +138,25 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              if (busInfoMap[element.stationName] != null) {
-                                for (final String element2 in busInfoMap[element.stationName]!) {
-                                  if (tokyoStationTokyoStationModelListMap[element2] != null) {
-                                    final String distance = utility.calcDistance(
-                                      originLat: element.lat.toDouble(),
-                                      originLng: element.lng.toDouble(),
-                                      destLat: tokyoStationTokyoStationModelListMap[element2]![0].lat.toDouble(),
-                                      destLng: tokyoStationTokyoStationModelListMap[element2]![0].lng.toDouble(),
-                                    );
-
-                                    if (distance != '') {
-                                      busStationList.add(
-                                        StationExtendsModel(
-                                          id: 0,
-                                          stationName: tokyoStationTokyoStationModelListMap[element2]![0].stationName,
-                                          address: tokyoStationTokyoStationModelListMap[element2]![0].address,
-                                          lat: tokyoStationTokyoStationModelListMap[element2]![0].lat,
-                                          lng: tokyoStationTokyoStationModelListMap[element2]![0].lng,
-                                          lineNumber: '',
-                                          lineName: '',
-                                          distance: distance.toDouble(),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                              }
-
                               ref.read(appParamProvider.notifier).setSelectedStationLatLng(
                                   latlng: LatLng(element.lat.toDouble(), element.lng.toDouble()));
 
                               appParamNotifier.setSecondOverlayParams(secondEntries: _secondEntries);
+
+                              print(tokyoStationNextStationMap[element.stationName]);
+
+
+
+                              /*
+
+                              I/flutter ( 5252): [{prev: 上井草, next: 武蔵関}]
+I/flutter ( 5252): [{prev: 西荻窪, next: 三鷹}, {prev: 三鷹, next: 西荻窪}, {prev: 井の頭公園, next: }]
+
+
+
+                              */
+
+
 
                               addSecondOverlay(
                                 context: context,
@@ -195,10 +169,12 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                                     Offset(context.screenSize.width * 0.5, context.screenSize.height * 0.6),
                                 onPositionChanged: (Offset newPos) => appParamNotifier.updateOverlayPosition(newPos),
                                 widget: BusInfoListDisplayAlert(
-                                    busInfo: busInfoMap[element.stationName] ?? <String>[],
-                                    height: context.screenSize.height * 0.3,
-                                    selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
-                                    tokyoStationTokyoStationModelListMap: tokyoStationTokyoStationModelListMap),
+                                  busInfo: busInfoMap[element.stationName] ?? <String>[],
+                                  height: context.screenSize.height * 0.3,
+                                  selectedStationLatLng: LatLng(element.lat.toDouble(), element.lng.toDouble()),
+                                  tokyoStationTokyoStationModelListMap: tokyoStationTokyoStationModelListMap,
+                                  nextStationMap: tokyoStationNextStationMap[element.stationName] ?? <Map<String, String>>[],
+                                ),
                               );
 
                               setDefaultBoundsMap();
@@ -248,15 +224,48 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                           Row(
                             children: <Widget>[
                               GestureDetector(
-                                onTap: busPolylineDisplay
-                                    ? () {
-                                        print(busStationList);
+                                onTap: () {
+                                  final List<StationExtendsModel> busStationList = <StationExtendsModel>[];
+
+                                  if (busInfoMap[element.stationName] != null) {
+                                    for (final String element2 in busInfoMap[element.stationName]!) {
+                                      if (tokyoStationTokyoStationModelListMap[element2] != null) {
+                                        final String distance = utility.calcDistance(
+                                          originLat: element.lat.toDouble(),
+                                          originLng: element.lng.toDouble(),
+                                          destLat: tokyoStationTokyoStationModelListMap[element2]![0].lat.toDouble(),
+                                          destLng: tokyoStationTokyoStationModelListMap[element2]![0].lng.toDouble(),
+                                        );
+
+                                        if (distance != '') {
+                                          busStationList.add(
+                                            StationExtendsModel(
+                                              id: 0,
+                                              stationName:
+                                                  tokyoStationTokyoStationModelListMap[element2]![0].stationName,
+                                              address: tokyoStationTokyoStationModelListMap[element2]![0].address,
+                                              lat: tokyoStationTokyoStationModelListMap[element2]![0].lat,
+                                              lng: tokyoStationTokyoStationModelListMap[element2]![0].lng,
+                                              lineNumber: '',
+                                              lineName: '',
+                                              distance: distance.toDouble(),
+                                            ),
+                                          );
+                                        }
                                       }
-                                    : null,
-                                child: Icon(Icons.directions_bus,
-                                    color: busPolylineDisplay
-                                        ? Colors.yellowAccent.withOpacity(0.5)
-                                        : Colors.white.withOpacity(0.5)),
+                                    }
+                                  }
+
+                                  print(busStationList);
+
+                                  print(element.stationName);
+
+                                  print(tokyoStationNextStationMap[element.stationName]);
+                                },
+                                child: Icon(
+                                  Icons.directions_bus,
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
                               ),
                               const SizedBox(width: 10),
                               GestureDetector(

@@ -14,12 +14,14 @@ class BusInfoListDisplayAlert extends ConsumerStatefulWidget {
     required this.height,
     required this.selectedStationLatLng,
     required this.tokyoStationTokyoStationModelListMap,
+    required this.nextStationMap,
   });
 
   final List<String> busInfo;
   final double height;
   final LatLng selectedStationLatLng;
   final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap;
+  final List<Map<String, String>> nextStationMap;
 
   @override
   ConsumerState<BusInfoListDisplayAlert> createState() => _BusInfoListDisplayAlertState();
@@ -78,6 +80,15 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
     busStationList
       ..sort((StationExtendsModel a, StationExtendsModel b) => a.distance.compareTo(b.distance) * -1)
       ..forEach((StationExtendsModel element) {
+        final List<String> nextStation = <String>[];
+        for (final Map<String, String> element2 in widget.nextStationMap) {
+          element2.forEach((String key, String value) {
+            if (value != '') {
+              nextStation.add(value);
+            }
+          });
+        }
+
         list.add(
           DefaultTextStyle(
             style: const TextStyle(fontSize: 12),
@@ -86,7 +97,9 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
               margin: const EdgeInsets.symmetric(vertical: 1),
               decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
-                color: Colors.black.withOpacity(0.3),
+                color: (nextStation.contains(element.stationName))
+                    ? Colors.blueGrey.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.3),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

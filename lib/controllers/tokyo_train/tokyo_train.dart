@@ -22,7 +22,7 @@ class TokyoTrainState with _$TokyoTrainState {
     @Default(<int>[]) List<int> selectTrainList,
     @Default(<String, List<TokyoStationModel>>{})
     Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
-    @Default(<String, Map<String, String>>{}) Map<String, Map<String, String>> tokyoStationNextStationMap,
+    @Default(<String, List<Map<String, String>>>{}) Map<String, List<Map<String, String>>> tokyoStationNextStationMap,
   }) = _TokyoTrainState;
 }
 
@@ -53,7 +53,7 @@ class TokyoTrain extends _$TokyoTrain {
 
       final Map<String, List<TokyoStationModel>> map4 = <String, List<TokyoStationModel>>{};
 
-      final Map<String, Map<String, String>> map5 = <String, Map<String, String>>{};
+      final Map<String, List<Map<String, String>>> map5 = <String, List<Map<String, String>>>{};
 
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
@@ -69,6 +69,8 @@ class TokyoTrain extends _$TokyoTrain {
           map3[element.id] = element;
 
           map4[element.stationName] = <TokyoStationModel>[];
+
+          map5[element.stationName] = <Map<String, String>>[];
         }
       }
 
@@ -83,13 +85,14 @@ class TokyoTrain extends _$TokyoTrain {
         for (final TokyoStationModel element in val.station) {
           map4[element.stationName]?.add(element);
 
-          map5[element.stationName] = <String, String>{
+          map5[element.stationName]?.add(<String, String>{
             'prev': (j == 0) ? '' : val.station[j - 1].stationName,
             'next': (j == val.station.length - 1) ? '' : val.station[j + 1].stationName,
-          };
+          });
 
           j++;
         }
+
         //----------------------------------------------------------------//
       }
 

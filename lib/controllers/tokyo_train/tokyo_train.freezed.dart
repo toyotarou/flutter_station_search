@@ -28,7 +28,7 @@ mixin _$TokyoTrainState {
   Map<String, List<TokyoStationModel>>
       get tokyoStationTokyoStationModelListMap =>
           throw _privateConstructorUsedError;
-  Map<String, Map<String, String>> get tokyoStationNextStationMap =>
+  Map<String, List<Map<String, String>>> get tokyoStationNextStationMap =>
       throw _privateConstructorUsedError;
 
   /// Create a copy of TokyoTrainState
@@ -51,7 +51,7 @@ abstract class $TokyoTrainStateCopyWith<$Res> {
       Map<String, TokyoStationModel> tokyoStationMap,
       List<int> selectTrainList,
       Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
-      Map<String, Map<String, String>> tokyoStationNextStationMap});
+      Map<String, List<Map<String, String>>> tokyoStationNextStationMap});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class _$TokyoTrainStateCopyWithImpl<$Res, $Val extends TokyoTrainState>
       tokyoStationNextStationMap: null == tokyoStationNextStationMap
           ? _value.tokyoStationNextStationMap
           : tokyoStationNextStationMap // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, String>>,
+              as Map<String, List<Map<String, String>>>,
     ) as $Val);
   }
 }
@@ -126,7 +126,7 @@ abstract class _$$TokyoTrainStateImplCopyWith<$Res>
       Map<String, TokyoStationModel> tokyoStationMap,
       List<int> selectTrainList,
       Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
-      Map<String, Map<String, String>> tokyoStationNextStationMap});
+      Map<String, List<Map<String, String>>> tokyoStationNextStationMap});
 }
 
 /// @nodoc
@@ -179,7 +179,7 @@ class __$$TokyoTrainStateImplCopyWithImpl<$Res>
       tokyoStationNextStationMap: null == tokyoStationNextStationMap
           ? _value._tokyoStationNextStationMap
           : tokyoStationNextStationMap // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, String>>,
+              as Map<String, List<Map<String, String>>>,
     ));
   }
 }
@@ -198,8 +198,8 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
       final List<int> selectTrainList = const <int>[],
       final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
           const <String, List<TokyoStationModel>>{},
-      final Map<String, Map<String, String>> tokyoStationNextStationMap =
-          const {}})
+      final Map<String, List<Map<String, String>>> tokyoStationNextStationMap =
+          const <String, List<Map<String, String>>>{}})
       : _tokyoTrainList = tokyoTrainList,
         _tokyoTrainMap = tokyoTrainMap,
         _tokyoTrainIdMap = tokyoTrainIdMap,
@@ -266,10 +266,10 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
     return EqualUnmodifiableMapView(_tokyoStationTokyoStationModelListMap);
   }
 
-  final Map<String, Map<String, String>> _tokyoStationNextStationMap;
+  final Map<String, List<Map<String, String>>> _tokyoStationNextStationMap;
   @override
   @JsonKey()
-  Map<String, Map<String, String>> get tokyoStationNextStationMap {
+  Map<String, List<Map<String, String>>> get tokyoStationNextStationMap {
     if (_tokyoStationNextStationMap is EqualUnmodifiableMapView)
       return _tokyoStationNextStationMap;
     // ignore: implicit_dynamic_type
@@ -328,15 +328,15 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
 
 abstract class _TokyoTrainState implements TokyoTrainState {
   const factory _TokyoTrainState(
-          {final List<TokyoTrainModel> tokyoTrainList,
-          final Map<String, TokyoTrainModel> tokyoTrainMap,
-          final Map<int, TokyoTrainModel> tokyoTrainIdMap,
-          final Map<String, TokyoStationModel> tokyoStationMap,
-          final List<int> selectTrainList,
-          final Map<String, List<TokyoStationModel>>
-              tokyoStationTokyoStationModelListMap,
-          final Map<String, Map<String, String>> tokyoStationNextStationMap}) =
-      _$TokyoTrainStateImpl;
+      {final List<TokyoTrainModel> tokyoTrainList,
+      final Map<String, TokyoTrainModel> tokyoTrainMap,
+      final Map<int, TokyoTrainModel> tokyoTrainIdMap,
+      final Map<String, TokyoStationModel> tokyoStationMap,
+      final List<int> selectTrainList,
+      final Map<String, List<TokyoStationModel>>
+          tokyoStationTokyoStationModelListMap,
+      final Map<String, List<Map<String, String>>>
+          tokyoStationNextStationMap}) = _$TokyoTrainStateImpl;
 
   @override
   List<TokyoTrainModel> get tokyoTrainList;
@@ -351,7 +351,7 @@ abstract class _TokyoTrainState implements TokyoTrainState {
   @override
   Map<String, List<TokyoStationModel>> get tokyoStationTokyoStationModelListMap;
   @override
-  Map<String, Map<String, String>> get tokyoStationNextStationMap;
+  Map<String, List<Map<String, String>>> get tokyoStationNextStationMap;
 
   /// Create a copy of TokyoTrainState
   /// with the given fields replaced by the non-null parameter values.
