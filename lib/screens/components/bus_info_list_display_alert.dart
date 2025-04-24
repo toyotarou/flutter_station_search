@@ -32,8 +32,28 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
 
   ///
   @override
-  Widget build(BuildContext context) =>
-      Column(children: <Widget>[SizedBox(height: widget.height * 0.8, child: displayBusInfoList())]);
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          bottom: 30,
+          right: 5,
+          child: Transform(
+            transform: Matrix4.diagonal3Values(1.0, 3.0, 1.0),
+            child: Text('BUS', style: TextStyle(color: Colors.white.withOpacity(0.6))),
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            SizedBox(
+              height: widget.height * 0.8,
+              child: displayBusInfoList(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   ///
   Widget displayBusInfoList() {
@@ -66,7 +86,7 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
               lng: widget.tokyoStationTokyoStationModelListMap[element]![0].lng,
               lineNumber: '',
               lineName: '',
-              distance: distance.toDouble(),
+              distance: distance.toDouble() * 1000,
             ),
           );
         }
@@ -105,7 +125,7 @@ class _BusInfoListDisplayAlertState extends ConsumerState<BusInfoListDisplayAler
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(element.stationName),
-                  Text(element.distance.toStringAsFixed(2)),
+                  Text('${element.distance.toStringAsFixed(0)} m'),
                 ],
               ),
             ),
