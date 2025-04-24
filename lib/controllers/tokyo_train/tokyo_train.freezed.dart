@@ -28,6 +28,8 @@ mixin _$TokyoTrainState {
   Map<String, List<TokyoStationModel>>
       get tokyoStationTokyoStationModelListMap =>
           throw _privateConstructorUsedError;
+  Map<String, Map<String, String>> get tokyoStationNextStationMap =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TokyoTrainState
   /// with the given fields replaced by the non-null parameter values.
@@ -48,8 +50,8 @@ abstract class $TokyoTrainStateCopyWith<$Res> {
       Map<int, TokyoTrainModel> tokyoTrainIdMap,
       Map<String, TokyoStationModel> tokyoStationMap,
       List<int> selectTrainList,
-      Map<String, List<TokyoStationModel>>
-          tokyoStationTokyoStationModelListMap});
+      Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
+      Map<String, Map<String, String>> tokyoStationNextStationMap});
 }
 
 /// @nodoc
@@ -73,6 +75,7 @@ class _$TokyoTrainStateCopyWithImpl<$Res, $Val extends TokyoTrainState>
     Object? tokyoStationMap = null,
     Object? selectTrainList = null,
     Object? tokyoStationTokyoStationModelListMap = null,
+    Object? tokyoStationNextStationMap = null,
   }) {
     return _then(_value.copyWith(
       tokyoTrainList: null == tokyoTrainList
@@ -100,6 +103,10 @@ class _$TokyoTrainStateCopyWithImpl<$Res, $Val extends TokyoTrainState>
           ? _value.tokyoStationTokyoStationModelListMap
           : tokyoStationTokyoStationModelListMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<TokyoStationModel>>,
+      tokyoStationNextStationMap: null == tokyoStationNextStationMap
+          ? _value.tokyoStationNextStationMap
+          : tokyoStationNextStationMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
     ) as $Val);
   }
 }
@@ -118,8 +125,8 @@ abstract class _$$TokyoTrainStateImplCopyWith<$Res>
       Map<int, TokyoTrainModel> tokyoTrainIdMap,
       Map<String, TokyoStationModel> tokyoStationMap,
       List<int> selectTrainList,
-      Map<String, List<TokyoStationModel>>
-          tokyoStationTokyoStationModelListMap});
+      Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
+      Map<String, Map<String, String>> tokyoStationNextStationMap});
 }
 
 /// @nodoc
@@ -141,6 +148,7 @@ class __$$TokyoTrainStateImplCopyWithImpl<$Res>
     Object? tokyoStationMap = null,
     Object? selectTrainList = null,
     Object? tokyoStationTokyoStationModelListMap = null,
+    Object? tokyoStationNextStationMap = null,
   }) {
     return _then(_$TokyoTrainStateImpl(
       tokyoTrainList: null == tokyoTrainList
@@ -168,6 +176,10 @@ class __$$TokyoTrainStateImplCopyWithImpl<$Res>
           ? _value._tokyoStationTokyoStationModelListMap
           : tokyoStationTokyoStationModelListMap // ignore: cast_nullable_to_non_nullable
               as Map<String, List<TokyoStationModel>>,
+      tokyoStationNextStationMap: null == tokyoStationNextStationMap
+          ? _value._tokyoStationNextStationMap
+          : tokyoStationNextStationMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
     ));
   }
 }
@@ -185,14 +197,17 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
           const <String, TokyoStationModel>{},
       final List<int> selectTrainList = const <int>[],
       final Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap =
-          const <String, List<TokyoStationModel>>{}})
+          const <String, List<TokyoStationModel>>{},
+      final Map<String, Map<String, String>> tokyoStationNextStationMap =
+          const {}})
       : _tokyoTrainList = tokyoTrainList,
         _tokyoTrainMap = tokyoTrainMap,
         _tokyoTrainIdMap = tokyoTrainIdMap,
         _tokyoStationMap = tokyoStationMap,
         _selectTrainList = selectTrainList,
         _tokyoStationTokyoStationModelListMap =
-            tokyoStationTokyoStationModelListMap;
+            tokyoStationTokyoStationModelListMap,
+        _tokyoStationNextStationMap = tokyoStationNextStationMap;
 
   final List<TokyoTrainModel> _tokyoTrainList;
   @override
@@ -251,9 +266,19 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
     return EqualUnmodifiableMapView(_tokyoStationTokyoStationModelListMap);
   }
 
+  final Map<String, Map<String, String>> _tokyoStationNextStationMap;
+  @override
+  @JsonKey()
+  Map<String, Map<String, String>> get tokyoStationNextStationMap {
+    if (_tokyoStationNextStationMap is EqualUnmodifiableMapView)
+      return _tokyoStationNextStationMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_tokyoStationNextStationMap);
+  }
+
   @override
   String toString() {
-    return 'TokyoTrainState(tokyoTrainList: $tokyoTrainList, tokyoTrainMap: $tokyoTrainMap, tokyoTrainIdMap: $tokyoTrainIdMap, tokyoStationMap: $tokyoStationMap, selectTrainList: $selectTrainList, tokyoStationTokyoStationModelListMap: $tokyoStationTokyoStationModelListMap)';
+    return 'TokyoTrainState(tokyoTrainList: $tokyoTrainList, tokyoTrainMap: $tokyoTrainMap, tokyoTrainIdMap: $tokyoTrainIdMap, tokyoStationMap: $tokyoStationMap, selectTrainList: $selectTrainList, tokyoStationTokyoStationModelListMap: $tokyoStationTokyoStationModelListMap, tokyoStationNextStationMap: $tokyoStationNextStationMap)';
   }
 
   @override
@@ -273,7 +298,10 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
                 .equals(other._selectTrainList, _selectTrainList) &&
             const DeepCollectionEquality().equals(
                 other._tokyoStationTokyoStationModelListMap,
-                _tokyoStationTokyoStationModelListMap));
+                _tokyoStationTokyoStationModelListMap) &&
+            const DeepCollectionEquality().equals(
+                other._tokyoStationNextStationMap,
+                _tokyoStationNextStationMap));
   }
 
   @override
@@ -285,7 +313,8 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
       const DeepCollectionEquality().hash(_tokyoStationMap),
       const DeepCollectionEquality().hash(_selectTrainList),
       const DeepCollectionEquality()
-          .hash(_tokyoStationTokyoStationModelListMap));
+          .hash(_tokyoStationTokyoStationModelListMap),
+      const DeepCollectionEquality().hash(_tokyoStationNextStationMap));
 
   /// Create a copy of TokyoTrainState
   /// with the given fields replaced by the non-null parameter values.
@@ -299,13 +328,15 @@ class _$TokyoTrainStateImpl implements _TokyoTrainState {
 
 abstract class _TokyoTrainState implements TokyoTrainState {
   const factory _TokyoTrainState(
-      {final List<TokyoTrainModel> tokyoTrainList,
-      final Map<String, TokyoTrainModel> tokyoTrainMap,
-      final Map<int, TokyoTrainModel> tokyoTrainIdMap,
-      final Map<String, TokyoStationModel> tokyoStationMap,
-      final List<int> selectTrainList,
-      final Map<String, List<TokyoStationModel>>
-          tokyoStationTokyoStationModelListMap}) = _$TokyoTrainStateImpl;
+          {final List<TokyoTrainModel> tokyoTrainList,
+          final Map<String, TokyoTrainModel> tokyoTrainMap,
+          final Map<int, TokyoTrainModel> tokyoTrainIdMap,
+          final Map<String, TokyoStationModel> tokyoStationMap,
+          final List<int> selectTrainList,
+          final Map<String, List<TokyoStationModel>>
+              tokyoStationTokyoStationModelListMap,
+          final Map<String, Map<String, String>> tokyoStationNextStationMap}) =
+      _$TokyoTrainStateImpl;
 
   @override
   List<TokyoTrainModel> get tokyoTrainList;
@@ -319,6 +350,8 @@ abstract class _TokyoTrainState implements TokyoTrainState {
   List<int> get selectTrainList;
   @override
   Map<String, List<TokyoStationModel>> get tokyoStationTokyoStationModelListMap;
+  @override
+  Map<String, Map<String, String>> get tokyoStationNextStationMap;
 
   /// Create a copy of TokyoTrainState
   /// with the given fields replaced by the non-null parameter values.

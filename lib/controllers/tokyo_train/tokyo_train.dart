@@ -22,6 +22,7 @@ class TokyoTrainState with _$TokyoTrainState {
     @Default(<int>[]) List<int> selectTrainList,
     @Default(<String, List<TokyoStationModel>>{})
     Map<String, List<TokyoStationModel>> tokyoStationTokyoStationModelListMap,
+    @Default(<String, Map<String, String>>{}) Map<String, Map<String, String>> tokyoStationNextStationMap,
   }) = _TokyoTrainState;
 }
 
@@ -52,6 +53,8 @@ class TokyoTrain extends _$TokyoTrain {
 
       final Map<String, List<TokyoStationModel>> map4 = <String, List<TokyoStationModel>>{};
 
+      final Map<String, Map<String, String>> map5 = <String, Map<String, String>>{};
+
       // ignore: avoid_dynamic_calls
       for (int i = 0; i < value['data'].length.toString().toInt(); i++) {
         // ignore: avoid_dynamic_calls
@@ -74,17 +77,29 @@ class TokyoTrain extends _$TokyoTrain {
         // ignore: avoid_dynamic_calls
         final TokyoTrainModel val = TokyoTrainModel.fromJson(value['data'][i] as Map<String, dynamic>);
 
+        //----------------------------------------------------------------//
+        int j = 0;
+
         for (final TokyoStationModel element in val.station) {
           map4[element.stationName]?.add(element);
+
+          map5[element.stationName] = <String, String>{
+            'prev': (j == 0) ? '' : val.station[j - 1].stationName,
+            'next': (j == val.station.length - 1) ? '' : val.station[j + 1].stationName,
+          };
+
+          j++;
         }
+        //----------------------------------------------------------------//
       }
 
       return state.copyWith(
         tokyoTrainList: list,
         tokyoTrainMap: map,
-        tokyoStationMap: map3,
         tokyoTrainIdMap: map2,
+        tokyoStationMap: map3,
         tokyoStationTokyoStationModelListMap: map4,
+        tokyoStationNextStationMap: map5,
       );
     } catch (e) {
       utility.showError('予期せぬエラーが発生しました');
