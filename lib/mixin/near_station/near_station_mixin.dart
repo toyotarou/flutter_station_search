@@ -105,6 +105,9 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
     final Map<String, List<Map<String, String>>> tokyoStationNextStationMap =
         ref.watch(tokyoTrainProvider.select((TokyoTrainState value) => value.tokyoStationNextStationMap));
 
+    final String selectedBusRouteStartStation =
+        ref.watch(appParamProvider.select((AppParamState value) => value.selectedBusRouteStartStation));
+
     final List<int> keepStation = <int>[];
 
     list2
@@ -226,6 +229,30 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
+                                  if (selectedStationLatLng == null) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.black.withOpacity(0.5),
+                                        content: const Text(
+                                          'select bus route start station',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        action: SnackBarAction(
+                                          label: 'close',
+                                          onPressed: () => ScaffoldMessenger.of(context).clearSnackBars(),
+                                        ),
+                                      ),
+                                    );
+
+                                    return;
+                                  }
+
+                                  if (selectedBusRouteStartStation == element.stationName) {
+                                    ref.read(appParamProvider.notifier).clearBusRouteStartStation();
+                                    return;
+                                  }
+
                                   final List<StationExtendsModel> busStationList = <StationExtendsModel>[];
 
                                   if (busInfoMap[element.stationName] != null) {
@@ -256,14 +283,28 @@ mixin NearStationMixin on ConsumerState<NearStationWidget> {
                                       }
                                     }
                                   }
+
+                                  ref.read(appParamProvider.notifier).setBusRouteStartStation(
+                                        busRouteStartStation: element.stationName,
+                                        busRouteGoalStationList: busStationList,
+                                      );
                                 },
                                 child: Row(
                                   children: <Widget>[
                                     Icon(
                                       Icons.directions_bus,
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: (element.stationName == selectedBusRouteStartStation)
+                                          ? const Color(0xFFFBB6CE).withOpacity(0.5)
+                                          : Colors.white.withOpacity(0.5),
                                     ),
-                                    const Text('BUS'),
+                                    Text(
+                                      'BUS',
+                                      style: TextStyle(
+                                        color: (element.stationName == selectedBusRouteStartStation)
+                                            ? const Color(0xFFFBB6CE)
+                                            : Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

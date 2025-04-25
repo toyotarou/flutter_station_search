@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../models/station_extends_model.dart';
 import '../../utility/utility.dart';
 
 part 'app_param.freezed.dart';
@@ -21,6 +22,8 @@ class AppParamState with _$AppParamState {
     @Default('') String selectedLineNumber,
     @Default(<String>[]) List<String> trainNameList,
     @Default(true) bool limitTokyoTrain,
+    @Default('') String selectedBusRouteStartStation,
+    @Default(<StationExtendsModel>[]) List<StationExtendsModel> busStationList,
   }) = _AppParamState;
 }
 
@@ -73,4 +76,18 @@ class AppParam extends _$AppParam {
 
   ///
   void setLimitTokyoTrain({required bool flag}) => state = state.copyWith(limitTokyoTrain: flag);
+
+  ///
+  void setBusRouteStartStation({
+    required String busRouteStartStation,
+    required List<StationExtendsModel> busRouteGoalStationList,
+  }) =>
+      state = state.copyWith(
+        selectedBusRouteStartStation: busRouteStartStation,
+        busStationList: busRouteGoalStationList,
+      );
+
+  ///
+  void clearBusRouteStartStation() =>
+      state = state.copyWith(selectedBusRouteStartStation: '', busStationList: <StationExtendsModel>[]);
 }

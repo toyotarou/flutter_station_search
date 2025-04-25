@@ -26,6 +26,9 @@ mixin _$AppParamState {
   String get selectedLineNumber => throw _privateConstructorUsedError;
   List<String> get trainNameList => throw _privateConstructorUsedError;
   bool get limitTokyoTrain => throw _privateConstructorUsedError;
+  String get selectedBusRouteStartStation => throw _privateConstructorUsedError;
+  List<StationExtendsModel> get busStationList =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -49,7 +52,9 @@ abstract class $AppParamStateCopyWith<$Res> {
       double currentZoom,
       String selectedLineNumber,
       List<String> trainNameList,
-      bool limitTokyoTrain});
+      bool limitTokyoTrain,
+      String selectedBusRouteStartStation,
+      List<StationExtendsModel> busStationList});
 }
 
 /// @nodoc
@@ -76,6 +81,8 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? selectedLineNumber = null,
     Object? trainNameList = null,
     Object? limitTokyoTrain = null,
+    Object? selectedBusRouteStartStation = null,
+    Object? busStationList = null,
   }) {
     return _then(_value.copyWith(
       firstEntries: freezed == firstEntries
@@ -114,6 +121,14 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.limitTokyoTrain
           : limitTokyoTrain // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedBusRouteStartStation: null == selectedBusRouteStartStation
+          ? _value.selectedBusRouteStartStation
+          : selectedBusRouteStartStation // ignore: cast_nullable_to_non_nullable
+              as String,
+      busStationList: null == busStationList
+          ? _value.busStationList
+          : busStationList // ignore: cast_nullable_to_non_nullable
+              as List<StationExtendsModel>,
     ) as $Val);
   }
 }
@@ -135,7 +150,9 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       double currentZoom,
       String selectedLineNumber,
       List<String> trainNameList,
-      bool limitTokyoTrain});
+      bool limitTokyoTrain,
+      String selectedBusRouteStartStation,
+      List<StationExtendsModel> busStationList});
 }
 
 /// @nodoc
@@ -160,6 +177,8 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? selectedLineNumber = null,
     Object? trainNameList = null,
     Object? limitTokyoTrain = null,
+    Object? selectedBusRouteStartStation = null,
+    Object? busStationList = null,
   }) {
     return _then(_$AppParamStateImpl(
       firstEntries: freezed == firstEntries
@@ -198,6 +217,14 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.limitTokyoTrain
           : limitTokyoTrain // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedBusRouteStartStation: null == selectedBusRouteStartStation
+          ? _value.selectedBusRouteStartStation
+          : selectedBusRouteStartStation // ignore: cast_nullable_to_non_nullable
+              as String,
+      busStationList: null == busStationList
+          ? _value._busStationList
+          : busStationList // ignore: cast_nullable_to_non_nullable
+              as List<StationExtendsModel>,
     ));
   }
 }
@@ -214,10 +241,13 @@ class _$AppParamStateImpl implements _AppParamState {
       this.currentZoom = 0,
       this.selectedLineNumber = '',
       final List<String> trainNameList = const <String>[],
-      this.limitTokyoTrain = true})
+      this.limitTokyoTrain = true,
+      this.selectedBusRouteStartStation = '',
+      final List<StationExtendsModel> busStationList = const []})
       : _firstEntries = firstEntries,
         _secondEntries = secondEntries,
-        _trainNameList = trainNameList;
+        _trainNameList = trainNameList,
+        _busStationList = busStationList;
 
   final List<OverlayEntry>? _firstEntries;
   @override
@@ -263,10 +293,21 @@ class _$AppParamStateImpl implements _AppParamState {
   @override
   @JsonKey()
   final bool limitTokyoTrain;
+  @override
+  @JsonKey()
+  final String selectedBusRouteStartStation;
+  final List<StationExtendsModel> _busStationList;
+  @override
+  @JsonKey()
+  List<StationExtendsModel> get busStationList {
+    if (_busStationList is EqualUnmodifiableListView) return _busStationList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_busStationList);
+  }
 
   @override
   String toString() {
-    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng, currentZoom: $currentZoom, selectedLineNumber: $selectedLineNumber, trainNameList: $trainNameList, limitTokyoTrain: $limitTokyoTrain)';
+    return 'AppParamState(firstEntries: $firstEntries, secondEntries: $secondEntries, setStateCallback: $setStateCallback, overlayPosition: $overlayPosition, selectedStationLatLng: $selectedStationLatLng, currentZoom: $currentZoom, selectedLineNumber: $selectedLineNumber, trainNameList: $trainNameList, limitTokyoTrain: $limitTokyoTrain, selectedBusRouteStartStation: $selectedBusRouteStartStation, busStationList: $busStationList)';
   }
 
   @override
@@ -291,7 +332,13 @@ class _$AppParamStateImpl implements _AppParamState {
             const DeepCollectionEquality()
                 .equals(other._trainNameList, _trainNameList) &&
             (identical(other.limitTokyoTrain, limitTokyoTrain) ||
-                other.limitTokyoTrain == limitTokyoTrain));
+                other.limitTokyoTrain == limitTokyoTrain) &&
+            (identical(other.selectedBusRouteStartStation,
+                    selectedBusRouteStartStation) ||
+                other.selectedBusRouteStartStation ==
+                    selectedBusRouteStartStation) &&
+            const DeepCollectionEquality()
+                .equals(other._busStationList, _busStationList));
   }
 
   @override
@@ -305,7 +352,9 @@ class _$AppParamStateImpl implements _AppParamState {
       currentZoom,
       selectedLineNumber,
       const DeepCollectionEquality().hash(_trainNameList),
-      limitTokyoTrain);
+      limitTokyoTrain,
+      selectedBusRouteStartStation,
+      const DeepCollectionEquality().hash(_busStationList));
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -326,7 +375,9 @@ abstract class _AppParamState implements AppParamState {
       final double currentZoom,
       final String selectedLineNumber,
       final List<String> trainNameList,
-      final bool limitTokyoTrain}) = _$AppParamStateImpl;
+      final bool limitTokyoTrain,
+      final String selectedBusRouteStartStation,
+      final List<StationExtendsModel> busStationList}) = _$AppParamStateImpl;
 
   @override
   List<OverlayEntry>? get firstEntries;
@@ -346,6 +397,10 @@ abstract class _AppParamState implements AppParamState {
   List<String> get trainNameList;
   @override
   bool get limitTokyoTrain;
+  @override
+  String get selectedBusRouteStartStation;
+  @override
+  List<StationExtendsModel> get busStationList;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.

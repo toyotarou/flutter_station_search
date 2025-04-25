@@ -11,6 +11,7 @@ import '../controllers/controllers_mixin.dart';
 import '../extensions/extensions.dart';
 import '../mixin/near_station/near_station_widget.dart';
 import '../mixin/train_list/train_list_widget.dart';
+import '../models/station_extends_model.dart';
 import '../models/station_model.dart';
 import '../models/tokyo_station_model.dart';
 import '../utility/tile_provider.dart';
@@ -53,6 +54,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   List<Polyline<Object>> selectTrainPolylinesList = <Polyline<Object>>[];
 
   List<Marker> selectTrainStationMarkerList = <Marker>[];
+
+  // ignore: always_specify_types
+  List<PolylineLayer> busRoutePolylineLayerList = <PolylineLayer>[];
 
   ///
   Future<void> _getCurrentLocation() async {
@@ -147,6 +151,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
     makeSelectTrainPolylineList();
 
+    makeBusRoutePolylineLayerList();
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -204,6 +210,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
                   MarkerLayer(markers: selectTrainStationMarkerList),
                 ],
+                for (int i = 0; i < busRoutePolylineLayerList.length; i++) busRoutePolylineLayerList[i],
               ],
             ),
             if (spotLatitude == 0 && spotLongitude == 0) ...<Widget>[
@@ -533,6 +540,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
     for (final LatLng element in markerPoints) {
       selectTrainStationMarkerList
           .add(Marker(point: element, child: const Icon(Icons.location_on, color: Colors.redAccent)));
+    }
+  }
+
+  ///
+  void makeBusRoutePolylineLayerList() {
+    busRoutePolylineLayerList.clear();
+
+    final List<String> keepStationName = <String>[];
+
+    if (appParamState.selectedStationLatLng != null) {
+      if (appParamState.busStationList.isNotEmpty) {
+        for (final StationExtendsModel element in appParamState.busStationList) {
+          if (!keepStationName.contains(element.stationName)) {
+            busRoutePolylineLayerList.add(
+              // ignore: always_specify_types
+              PolylineLayer(
+                polylines: <Polyline<Object>>[
+                  // ignore: always_specify_types
+                  Polyline(points: [
+                    LatLng(
+                      appParamState.selectedStationLatLng!.latitude,
+                      appParamState.selectedStationLatLng!.longitude,
+                    ),
+                    LatLng(element.lat.toDouble(), element.lng.toDouble()),
+                  ], color: Colors.purpleAccent.withOpacity(0.5), strokeWidth: 4),
+                ],
+              ),
+            );
+          }
+
+          keepStationName.add(element.stationName);
+        }
+      }
     }
   }
 }
